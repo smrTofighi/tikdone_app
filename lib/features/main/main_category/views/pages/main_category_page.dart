@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:todo_infinity_app/core/values/colors.dart';
 import 'package:todo_infinity_app/core/values/strings.dart';
@@ -41,6 +42,7 @@ class CategoryList extends StatelessWidget {
   final MainCategoryViewModel categoryVM = Get.find<MainCategoryViewModel>();
 
   @override
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
     return GetBuilder<MainCategoryViewModel>(
@@ -52,10 +54,8 @@ class CategoryList extends StatelessWidget {
                 height: size.height * 0.75,
                 child: const Center(
                   child: Text(
-                    'هنوز دسته بندی ساخته نشده است',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+                    'هنوز دسته‌بندی ساخته نشده است',
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
               )
@@ -63,38 +63,38 @@ class CategoryList extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 itemCount: vm.model.categoryList.length,
                 shrinkWrap: true,
-                scrollDirection: Axis.vertical,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 8), // پدینگ کلی برای گرید
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.9,
+                  childAspectRatio: 0.85, // تناسب بهتر برای کارت‌ها
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
                 ),
                 itemBuilder: (context, index) {
                   return LongPressDraggable(
                     data: index,
                     feedback: Opacity(
                       opacity: 0.8,
-                      child: CategoryCard(
-                        title: vm.model.categoryList[index].title,
-                        index: index,
-                        iconIndex: vm.model.categoryList[index].iconIndex,
-                        colorIndex: vm.model.categoryList[index].colorIndex,
-                        totalTodos: vm.model.categoryList[index].totalTodos,
-                        percentage: vm.model.categoryList[index].percentage,
-                        completedTodos:
-                            vm.model.categoryList[index].completedTodos,
-                        onTap: () {
-                          //vm.goToTaskListPage(vm.model.categoryList[index]);
-                        },
+                      child: Material(
+                        // برای جلوگیری از خطای Hero در Drag
+                        color: Colors.transparent,
+                        child: CategoryCard(
+                          title: vm.model.categoryList[index].title,
+                          index: index,
+                          iconIndex: vm.model.categoryList[index].iconIndex,
+                          colorIndex: vm.model.categoryList[index].colorIndex,
+                          totalTodos: vm.model.categoryList[index].totalTodos,
+                          percentage: vm.model.categoryList[index].percentage,
+                          completedTodos:
+                              vm.model.categoryList[index].completedTodos,
+                          onTap: () {},
+                        ),
                       ),
                     ),
-                    onDragStarted: () {
-                      categoryVM.changeDeleting(true);
-                      log('start');
-                    },
-                    onDraggableCanceled: (_, __) {
-                      categoryVM.changeDeleting(false);
-                      log('cancle');
-                    },
+                    onDragStarted: () => categoryVM.changeDeleting(true),
+                    onDraggableCanceled: (_, __) =>
+                        categoryVM.changeDeleting(false),
                     onDragEnd: (_) {
                       categoryVM.changeDeleting(false);
                       categoryVM.deleteCategory(
@@ -113,7 +113,13 @@ class CategoryList extends StatelessWidget {
                         vm.goToTaskListPage(vm.model.categoryList[index]);
                       },
                     ),
-                  );
+                  )
+                      // افکت آبشاری ظاهر شدن کارت‌ها
+                      .animate(delay: (index * 100).ms)
+                      .fade(duration: 400.ms)
+                      .scale(
+                          begin: const Offset(0.9, 0.9),
+                          curve: Curves.easeOutBack);
                 },
               ),
       ),

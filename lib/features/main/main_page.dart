@@ -75,8 +75,9 @@ class MainPage extends StatelessWidget {
       bottomNavigationBar: Obx(
         () => AnimatedBottomNavigationBar(
           icons: const [
-            FontAwesomeIcons.house,
-            FontAwesomeIcons.chartColumn,
+            Icons.home_rounded,
+            Icons.chat_rounded,
+            
           ],
           inactiveColor: Theme.of(context).iconTheme.color,
           activeColor: AppColors.primary,

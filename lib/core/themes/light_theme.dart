@@ -22,7 +22,7 @@ ThemeData lightTheme() {
     floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: AppColors.primaryBG,),
     inputDecorationTheme: inputTheme(),
     elevatedButtonTheme: elevatedButtonTheme(),
-    bottomAppBarTheme: const BottomAppBarTheme(color: AppColors.white),
+    bottomAppBarTheme: const BottomAppBarThemeData(color: AppColors.white),
     iconTheme: const IconThemeData(
       color: AppColors.black
 
