@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/styles/text_styles.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/dimens.dart';
-import 'package:todo_infinity_app/core/values/icons.dart';
-import 'package:todo_infinity_app/core/values/strings.dart';
-import 'package:todo_infinity_app/features/main/widgets/loading.dart';
-import 'package:todo_infinity_app/features/auth/views/widgets/custom_textfield.dart';
-import 'package:todo_infinity_app/features/main/main_category/view_model/main_category_view_model.dart';
+import 'package:tikdone_app/core/values/colors.dart'; // حاوی ThemeHelper
+import 'package:tikdone_app/core/values/icons.dart'; // حاوی AppIcons
+import 'package:tikdone_app/core/values/strings.dart';
+import 'package:tikdone_app/features/main/widgets/loading.dart';
+import 'package:tikdone_app/features/main/main_category/view_model/main_category_view_model.dart';
 import '../../features/main/main_category/views/widgets/color_widget.dart';
 
 void bottomSheetCategory(
@@ -16,183 +14,321 @@ void bottomSheetCategory(
   TextEditingController controller,
   Function() confirmTap,
   Function() closeTap,
-  BuildContext context,
-) {
+  BuildContext context, {
+  // این پارامترها برای حالت ویرایش اضافه شده‌اند
+  String? initialIconKey,
+  String? initialThemeString,
+}) {
   final categoryVM = Get.find<MainCategoryViewModel>();
-  RxBool emailValidate = false.obs;
-  final RxInt colorIndex = 0.obs;
-  final RxInt iconIndex = 0.obs;
+
+  // حالا متغیرهای ما String هستند
+  // اگر مقدار اولیه نداشتیم، اولین آیتم لیست‌ها را به صورت پیش‌فرض انتخاب می‌کنیم
+  final RxString selectedTheme =
+      (initialThemeString ?? ThemeHelper.defaultThemes[0]).obs;
+  final RxString selectedIconKey = (initialIconKey ?? AppIcons.iconKeys[0]).obs;
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController categoryController = TextEditingController();
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
   Get.bottomSheet(
     Container(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      width: AppDimens.sizeOfDevice(context).width,
-      height: AppDimens.sizeOfDevice(context).height / 2.2,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
-        color: Theme.of(context).cardColor,
+      padding: EdgeInsets.only(
+        top: 16,
+        left: 20,
+        right: 20,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
-      child: Form(
-        key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                title,
-                style: AppTextStyles.titleOfBottomSheet,
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: CustomTextField(
-                  controller: categoryController,
-                  hint: 'دسته بندی',
-                  validator: (val) {
-                    if (val!.isEmpty) {
-                      return PersianStrings.requiredText;
-                    }
-                    return null;
-                  },
-                )),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 6.0),
-              height: 45,
-              child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                itemCount: iconList.length,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Obx(
-                    () => IconWidget(
-                      colorIndex: colorIndex.value,
-                      iconIndex: iconIndex.value,
-                      index: index,
-                      onTap: () {
-                        iconIndex(index);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-            Gap(AppDimens.high),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              height: 34,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: colorList.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => Obx(
-                  () => ColorWidget(
-                      color: index == colorIndex.value
-                          ? colorList[index]
-                          : colorList[index].withOpacity(0.45),
-                      onTap: () {
-                        colorIndex(index);
-                      }),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(28),
+          topRight: Radius.circular(28),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 25,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: SingleChildScrollView(
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white24 : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            Obx(
-              () => categoryVM.isLoadingBottomSheet.value
-                  ? const Center(
-                    child: Loading(
-                        color: AppColors.primary,
-                        size: 42,
-                      ),
-                  )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          height: 35,
-                          width: AppDimens.sizeOfDevice(context).width / 3,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              categoryVM.addCategory(
-                                title: categoryController.text,
-                                iconIndex: iconIndex.value,
-                                colorIndex: colorIndex.value,
-                                context: context,
-                              );
-                            },
-                            child: const Text(PersianStrings.add),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        SizedBox(
-                          height: 35,
-                          width: AppDimens.sizeOfDevice(context).width / 3,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              emailValidate(false);
-                              closeTap();
-                            },
-                            child: const Text(PersianStrings.cancel),
-                          ),
-                        ),
-                      ],
+              const Gap(16),
+
+              // تیتر + پیش‌نمایش زنده آیکون
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : const Color(0xFF1E293B),
                     ),
-            )
-          ],
+                  ),
+                  Obx(() {
+                    final currentColor =
+                        ThemeHelper.parsePrimaryColor(selectedTheme.value);
+                    return Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: currentColor.withOpacity(0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        AppIcons.getIcon(selectedIconKey.value),
+                        size: 26,
+                        color: currentColor,
+                      ),
+                    ).animate(target: currentColor.value.toDouble()).scale(
+                          duration: 250.ms,
+                          curve: Curves.easeOutBack,
+                        );
+                  }),
+                ],
+              ),
+              const Gap(20),
+
+              TextFormField(
+                controller: controller,
+                autofocus: false,
+                style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+                decoration: InputDecoration(
+                  labelText: 'نام دسته‌بندی',
+                  hintText: 'مثلاً: کاری، شخصی، دانشگاه...',
+                  filled: true,
+                  fillColor: isDark
+                      ? const Color(0xFF0F172A)
+                      : const Color(0xFFF1F5F9),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                validator: (val) {
+                  if (val == null || val.trim().isEmpty) {
+                    return PersianStrings.requiredText;
+                  }
+                  return null;
+                },
+              ),
+              const Gap(20),
+
+              // انتخاب آیکون از روی Keys
+              Text(
+                'انتخاب آیکون',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white60 : Colors.grey.shade700,
+                ),
+              ),
+              const Gap(8),
+              SizedBox(
+                height: 52,
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: AppIcons.iconKeys.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final currentIconKey = AppIcons.iconKeys[index];
+                    return Obx(
+                      () => IconWidget(
+                        iconKey: currentIconKey,
+                        selectedIconKey: selectedIconKey.value,
+                        selectedThemeString: selectedTheme.value,
+                        onTap: () => selectedIconKey(currentIconKey),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const Gap(16),
+
+              // انتخاب رنگ از تم‌های جدید
+              Text(
+                'انتخاب رنگ',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white60 : Colors.grey.shade700,
+                ),
+              ),
+              const Gap(8),
+              SizedBox(
+                height: 42,
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: ThemeHelper.defaultThemes.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final currentThemeString = ThemeHelper.defaultThemes[index];
+                    final parsedColor =
+                        ThemeHelper.parsePrimaryColor(currentThemeString);
+                    return Obx(() {
+                      final isSelected =
+                          currentThemeString == selectedTheme.value;
+                      return ColorWidget(
+                        color: isSelected
+                            ? parsedColor
+                            : parsedColor.withOpacity(0.4),
+                        onTap: () => selectedTheme(currentThemeString),
+                      );
+                    });
+                  },
+                ),
+              ),
+              const Gap(24),
+
+              Obx(
+                () => categoryVM.isLoadingBottomSheet.value
+                    ? const Center(
+                        child: Loading(
+                          color: AppColors.primary,
+                          size: 38,
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                side: BorderSide(
+                                  color: isDark
+                                      ? Colors.white24
+                                      : Colors.grey.shade300,
+                                ),
+                              ),
+                              onPressed: () {
+                                Get.back();
+                                closeTap();
+                              },
+                              child: Text(
+                                PersianStrings.cancel,
+                                style: TextStyle(
+                                  color: isDark
+                                      ? Colors.white70
+                                      : Colors.grey.shade700,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Gap(12),
+                          Expanded(
+                            flex: 2,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  // حالا رشته‌ها رو می‌فرستیم به ویومدل
+                                  categoryVM.addCategory(
+                                    title: controller.text.trim(),
+                                    iconString:
+                                        selectedIconKey.value, // کلید آیکون
+                                    themeString: selectedTheme.value, // کلید تم
+                                    context: context,
+                                  );
+                                  confirmTap();
+                                }
+                              },
+                              child: const Text(
+                                PersianStrings.add,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     ),
-    backgroundColor: Colors.transparent,
-    isDismissible: false,
+    isScrollControlled: true,
   );
 }
 
 class IconWidget extends StatelessWidget {
   const IconWidget({
     super.key,
-    required this.iconIndex,
-    required this.colorIndex,
-    required this.index,
+    required this.iconKey,
+    required this.selectedIconKey,
+    required this.selectedThemeString,
     required this.onTap,
   });
 
-  final int index;
-
-  final int iconIndex;
-  final int colorIndex;
+  final String iconKey;
+  final String selectedIconKey;
+  final String selectedThemeString;
   final Function() onTap;
+
   @override
   Widget build(BuildContext context) {
+    final isSelected = iconKey == selectedIconKey;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final currentColor = ThemeHelper.parsePrimaryColor(selectedThemeString);
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        width: 45,
-        height: 45,
-        padding: EdgeInsets.all(AppDimens.small / 1.2),
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        width: 46,
+        height: 46,
+        margin: const EdgeInsets.symmetric(horizontal: 4.0),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppDimens.radius),
-            border: Border.all(
-                color: index == iconIndex
-                    ? colorList[colorIndex]
-                    : Colors.transparent,
-                width: 2)),
-        curve: Curves.easeInOutQuint,
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        duration: const Duration(milliseconds: 350),
-        child: ImageIcon(
-          iconList[index].image,
-          size: 32,
-          color: index == iconIndex ? colorList[colorIndex] : Colors.grey,
+          color: isSelected
+              ? currentColor.withOpacity(0.15)
+              : (isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9)),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? currentColor : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        child: Center(
+          child: Icon(
+            AppIcons.getIcon(iconKey),
+            size: 24,
+            color: isSelected
+                ? currentColor
+                : (isDark ? Colors.white38 : Colors.grey.shade500),
+          ),
         ),
       ),
     );

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:todo_infinity_app/core/values/strings.dart';
+import 'package:tikdone_app/core/values/strings.dart';
 
 class NoTodoHere extends StatelessWidget {
   const NoTodoHere({

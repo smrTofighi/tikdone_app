@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/features/main/widgets/loading.dart';
-import 'package:todo_infinity_app/features/main/main_report/view_model/main_report_view_model.dart';
-import 'package:todo_infinity_app/features/main/main_report/views/widgets/category_chart.dart';
-import 'package:todo_infinity_app/features/main/main_report/views/widgets/category_chart_list.dart';
+import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/features/main/widgets/loading.dart';
+import 'package:tikdone_app/features/main/main_report/view_model/main_report_view_model.dart';
+import 'package:tikdone_app/features/main/main_report/views/widgets/category_chart.dart';
+import 'package:tikdone_app/features/main/main_report/views/widgets/category_chart_list.dart';
 
 class ReportPage extends StatelessWidget {
   ReportPage({super.key});

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/routes/pages.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/strings.dart';
-import 'package:todo_infinity_app/features/auth/view_model/auth_view_model.dart';
-import 'package:todo_infinity_app/features/main/widgets/loading.dart';
+import 'package:tikdone_app/core/routes/pages.dart';
+import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/core/values/strings.dart';
+import 'package:tikdone_app/features/auth/view_model/auth_view_model.dart';
+import 'package:tikdone_app/features/main/widgets/loading.dart';
 import 'package:validators/validators.dart';
 
 class LogInPage extends StatefulWidget {
@@ -40,245 +40,219 @@ class _LogInPageState extends State<LogInPage> {
       backgroundColor:
           isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // ۱. هدر و آیکون اختصاصی
-                  Column(
-                    children: [
-                      Container(
-                        width: 72,
-                        height: 72,
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+
+                    // --- بخش هدر و لوگوی تیک‌دان ---
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBG.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.task_alt_rounded, // آیکون جدید و مرتبط با تیک‌دان
+                        size: 48,
+                        color: AppColors.primaryBG,
+                      ),
+                    ).animate().scale(
+                        delay: 100.ms,
+                        duration: 400.ms,
+                        curve: Curves.easeOutBack),
+
+                    const Gap(16),
+                    Text(
+                      'تیک‌دان',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ).animate().fade(delay: 200.ms).slideY(begin: 0.2, end: 0),
+
+                    const Gap(8),
+                    Text(
+                      PersianStrings.welcomeBack,
+                      style: TextStyle(
+                        color: isDark
+                            ? Colors.blueGrey.shade300
+                            : Colors.grey.shade600,
+                        fontSize: 15,
+                      ),
+                    ).animate().fade(delay: 300.ms).slideY(begin: 0.2, end: 0),
+
+                    const Gap(40),
+
+                    // --- بخش فرم ---
+                    Form(
+                      key: _formKey,
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primaryBG,
-                              AppColors.primaryBG.withOpacity(0.7),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(22),
+                          color:
+                              isDark ? const Color(0xFF1E293B) : Colors.white,
+                          borderRadius: BorderRadius.circular(32),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryBG.withOpacity(0.35),
-                              blurRadius: 18,
-                              offset: const Offset(0, 8),
+                              color: isDark
+                                  ? Colors.black26
+                                  : AppColors.primaryBG.withOpacity(0.05),
+                              blurRadius: 32,
+                              offset: const Offset(0, 12),
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.all_inclusive_rounded,
-                          size: 40,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Gap(18),
-                      Text(
-                        'تاسک بینهایت',
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const Gap(6),
-                      Text(
-                        PersianStrings.enterYourDetailsBelow,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: isDark
-                              ? Colors.blueGrey.shade200
-                              : Colors.grey.shade600,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  )
-                      .animate()
-                      .fade(duration: 400.ms)
-                      .slideY(begin: -0.15, end: 0, curve: Curves.easeOutCubic),
-
-                  const Gap(32),
-
-                  // ۲. کارت فرم ورود
-                  Container(
-                    padding: const EdgeInsets.all(22),
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E293B) : Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: isDark
-                            ? Colors.white10
-                            : Colors.black.withOpacity(0.04),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: isDark
-                              ? Colors.black26
-                              : Colors.black.withOpacity(0.04),
-                          blurRadius: 24,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // فیلد ایمیل
-                        TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'ایمیل',
-                            prefixIcon: const Icon(
-                              Icons.alternate_email_rounded,
-                              size: 20,
-                            ),
-                            filled: true,
-                            fillColor: isDark
-                                ? const Color(0xFF0F172A)
-                                : const Color(0xFFF1F5F9),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          validator: (val) {
-                            if (val == null || val.trim().isEmpty) {
-                              return PersianStrings.requiredText;
-                            }
-                            if (!isEmail(val.trim())) {
-                              return PersianStrings.emailFormatIsNotTrue;
-                            }
-                            return null;
-                          },
-                        ),
-                        const Gap(16),
-
-                        // فیلد رمز عبور
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: _isPasswordObscure,
-                          decoration: InputDecoration(
-                            labelText: 'رمز عبور',
-                            prefixIcon: const Icon(
-                              Icons.lock_outline_rounded,
-                              size: 20,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordObscure
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                                size: 20,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordObscure = !_isPasswordObscure;
-                                });
-                              },
-                            ),
-                            filled: true,
-                            fillColor: isDark
-                                ? const Color(0xFF0F172A)
-                                : const Color(0xFFF1F5F9),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          validator: (val) {
-                            if (val == null || val.isEmpty) {
-                              return PersianStrings.requiredText;
-                            }
-                            return null;
-                          },
-                        ),
-                        const Gap(24),
-
-                        // دکمه ورود
-                        SizedBox(
-                          height: 50,
-                          child: Obx(
-                            () => ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryBG,
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(
+                                  color:
+                                      isDark ? Colors.white : Colors.black87),
+                              decoration: InputDecoration(
+                                labelText: 'ایمیل',
+                                prefixIcon: Icon(Icons.alternate_email_rounded,
+                                    color: AppColors.primaryBG),
+                                filled: true,
+                                fillColor: isDark
+                                    ? const Color(0xFF0F172A)
+                                    : const Color(0xFFF1F5F9),
+                                border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide.none,
                                 ),
                               ),
-                              onPressed: authVM.isLoading.value
-                                  ? null
-                                  : () {
-                                      if (_formKey.currentState!.validate()) {
-                                        authVM.logInUser(
-                                          email: _emailController.text.trim(),
-                                          password: _passwordController.text,
-                                          context: context,
-                                        );
-                                      }
-                                    },
-                              child: authVM.isLoading.value
-                                  ? const Loading(
-                                      color: Colors.white,
-                                      size: 22,
-                                    )
-                                  : const Text(
-                                      PersianStrings.signin,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                              validator: (val) {
+                                if (val == null || val.trim().isEmpty)
+                                  return PersianStrings.requiredText;
+                                if (!isEmail(val.trim()))
+                                  return PersianStrings.emailFormatIsNotTrue;
+                                return null;
+                              },
                             ),
+                            const Gap(20),
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _isPasswordObscure,
+                              style: TextStyle(
+                                  color:
+                                      isDark ? Colors.white : Colors.black87),
+                              decoration: InputDecoration(
+                                labelText: 'رمز عبور',
+                                prefixIcon: Icon(Icons.lock_outline_rounded,
+                                    color: AppColors.primaryBG),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordObscure
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : Colors.black45,
+                                  ),
+                                  onPressed: () => setState(() =>
+                                      _isPasswordObscure = !_isPasswordObscure),
+                                ),
+                                filled: true,
+                                fillColor: isDark
+                                    ? const Color(0xFF0F172A)
+                                    : const Color(0xFFF1F5F9),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                              validator: (val) {
+                                if (val == null || val.isEmpty)
+                                  return PersianStrings.requiredText;
+                                return null;
+                              },
+                            ),
+                            const Gap(32),
+                            SizedBox(
+                              height: 54,
+                              child: Obx(
+                                () => ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryBG,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  onPressed: authVM.isLoading.value
+                                      ? null
+                                      : () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            authVM.logInUser(
+                                              email:
+                                                  _emailController.text.trim(),
+                                              password:
+                                                  _passwordController.text,
+                                              context: context,
+                                            );
+                                          }
+                                        },
+                                  child: authVM.isLoading.value
+                                      ? const Loading(
+                                          color: Colors.white, size: 24)
+                                      : const Text(
+                                          PersianStrings.signin,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).animate().fade(delay: 400.ms, duration: 500.ms).slideY(
+                          begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                    ),
+
+                    const Spacer(),
+
+                    // --- فوتر ---
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          PersianStrings.dontHaveAnAccount,
+                          style: TextStyle(
+                              color: isDark
+                                  ? Colors.white60
+                                  : Colors.grey.shade600),
+                        ),
+                        TextButton(
+                          onPressed: () => Get.offNamed(PageName.signUp),
+                          child: Text(
+                            PersianStrings.signup,
+                            style: TextStyle(
+                                color: AppColors.primaryBG,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
-                    ),
-                  )
-                      .animate()
-                      .fade(delay: 150.ms, duration: 450.ms)
-                      .slideY(begin: 0.1, end: 0, curve: Curves.easeOutQuad),
-
-                  const Gap(24),
-
-                  // ۳. فوتر دعوت به ثبت‌نام
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        PersianStrings.dontHaveAnAccount,
-                        style: TextStyle(
-                          color: isDark ? Colors.white60 : Colors.grey.shade600,
-                          fontSize: 13,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => Get.offNamed(PageName.signUp),
-                        child: Text(
-                          PersianStrings.signup,
-                          style: TextStyle(
-                            color: AppColors.primaryBG,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ).animate().fade(delay: 300.ms, duration: 400.ms),
-                ],
+                    ).animate().fade(delay: 600.ms),
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

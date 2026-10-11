@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/features/search/search_task_widget.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:tikdone_app/features/search/search_task_widget.dart';
 import '../../../core/styles/text_styles.dart';
 import '../../../core/values/colors.dart';
 import '../../../core/values/dimens.dart';
@@ -23,8 +24,8 @@ class SearchView extends StatelessWidget {
             Get.back();
           },
           color: Colors.black,
-          icon: ImageIcon(
-            MyIcons.arrowRight.image,
+          icon: Icon(
+            EvaIcons.arrow_left,
             size: 22,
           ),
         ),
@@ -40,7 +41,9 @@ class SearchView extends StatelessWidget {
                     hintText: 'جستجو ماموریت',
                     icon: IconButton(
                       onPressed: () {},
-                      icon: ImageIcon(MyIcons.search.image),
+                      icon: Icon(
+                        EvaIcons.search,
+                      ),
                     ),
                   ),
                 ),

@@ -2,10 +2,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/strings.dart';
-import 'package:todo_infinity_app/features/main/widgets/loading.dart';
-import 'package:todo_infinity_app/features/main/main_category/views/widgets/catogry_card.dart';
+import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/core/values/strings.dart';
+import 'package:tikdone_app/features/main/widgets/loading.dart';
+import 'package:tikdone_app/features/main/main_category/views/widgets/catogry_card.dart';
 import '../../view_model/main_category_view_model.dart';
 
 // ignore: must_be_immutable
@@ -63,59 +63,40 @@ class CategoryList extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 itemCount: vm.model.categoryList.length,
                 shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 8), // پدینگ کلی برای گرید
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.85, // تناسب بهتر برای کارت‌ها
+                  childAspectRatio: 0.85,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                 ),
                 itemBuilder: (context, index) {
-                  return LongPressDraggable(
-                    data: index,
-                    feedback: Opacity(
-                      opacity: 0.8,
-                      child: Material(
-                        // برای جلوگیری از خطای Hero در Drag
-                        color: Colors.transparent,
-                        child: CategoryCard(
-                          title: vm.model.categoryList[index].title,
-                          index: index,
-                          iconIndex: vm.model.categoryList[index].iconIndex,
-                          colorIndex: vm.model.categoryList[index].colorIndex,
-                          totalTodos: vm.model.categoryList[index].totalTodos,
-                          percentage: vm.model.categoryList[index].percentage,
-                          completedTodos:
-                              vm.model.categoryList[index].completedTodos,
-                          onTap: () {},
-                        ),
-                      ),
-                    ),
-                    onDragStarted: () => categoryVM.changeDeleting(true),
-                    onDraggableCanceled: (_, __) =>
-                        categoryVM.changeDeleting(false),
-                    onDragEnd: (_) {
-                      categoryVM.changeDeleting(false);
-                      categoryVM.deleteCategory(
-                          vm.model.categoryList[index].id, index, context);
+                  final category = vm.model.categoryList[index];
+
+                  return CategoryCard(
+                    title: category.title,
+                    index: index,
+                    icon: category.icon,
+                    theme: category.theme,
+                    totalTodos: category.totalTodos,
+                    percentage: category.percentage,
+                    completedTodos: category.completedTodos,
+                    onTap: () => vm.goToTaskListPage(category),
+                    onEdit: () {
+                      // باز کردن همان باتم‌شیت ساخت، ولی در حالت ویرایش با مقادیر فعلی
                     },
-                    child: CategoryCard(
-                      title: vm.model.categoryList[index].title,
-                      index: index,
-                      iconIndex: vm.model.categoryList[index].iconIndex,
-                      colorIndex: vm.model.categoryList[index].colorIndex,
-                      totalTodos: vm.model.categoryList[index].totalTodos,
-                      percentage: vm.model.categoryList[index].percentage,
-                      completedTodos:
-                          vm.model.categoryList[index].completedTodos,
-                      onTap: () {
-                        vm.goToTaskListPage(vm.model.categoryList[index]);
-                      },
-                    ),
+                    onDelete: () {
+                      showDeleteCategoryDialog(
+                        context,
+                        category.id,
+                        category.title,
+                        category.totalTodos,
+                        index,
+                      );
+                    },
                   )
-                      // افکت آبشاری ظاهر شدن کارت‌ها
-                      .animate(delay: (index * 100).ms)
+                      .animate(delay: (index * 80).ms)
                       .fade(duration: 400.ms)
                       .scale(
                           begin: const Offset(0.9, 0.9),
@@ -145,4 +126,100 @@ class CategoriesText extends StatelessWidget {
       ),
     );
   }
+}
+
+void showDeleteCategoryDialog(
+  BuildContext context,
+  String categoryId,
+  String categoryTitle,
+  int totalTodos,
+  int index,
+) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final categoryVM = Get.find<MainCategoryViewModel>();
+
+  Get.bottomSheet(
+    Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: isDark ? Colors.white24 : Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.redAccent.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.delete_forever_rounded,
+              size: 36,
+              color: Colors.redAccent,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'حذف دسته‌بندی «$categoryTitle»؟',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            totalTodos > 0
+                ? 'با حذف این دسته‌بندی، تمامی $totalTodos مأموریت داخل آن نیز پاک خواهند شد.'
+                : 'آیا از حذف این دسته‌بندی اطمینان دارید؟',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              color: isDark ? Colors.white60 : Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                  onPressed: () => Get.back(),
+                  child: const Text('انصراف'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                  onPressed: () {
+                    Get.back();
+                    categoryVM.deleteCategory(categoryId, index, context);
+                  },
+                  child: const Text('حذف شود'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }

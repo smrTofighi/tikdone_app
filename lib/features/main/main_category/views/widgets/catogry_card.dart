@@ -1,121 +1,202 @@
 import 'package:flutter/material.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:todo_infinity_app/core/gen/fonts.gen.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/icons.dart';
+import 'package:tikdone_app/core/gen/fonts.gen.dart';
+import 'package:tikdone_app/core/values/colors.dart'; // برای ThemeHelper
+import 'package:tikdone_app/core/values/icons.dart'; // برای AppIcons
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({
     super.key,
     required this.title,
     required this.index,
-    required this.iconIndex,
-    required this.colorIndex,
+    required this.icon,
+    required this.theme,
     required this.onTap,
     required this.totalTodos,
     required this.percentage,
     required this.completedTodos,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   final String title;
   final int index;
-  final int iconIndex;
-  final int colorIndex;
+  final String icon;
+  final String theme;
   final Function() onTap;
   final int totalTodos;
   final double percentage;
   final int completedTodos;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // ۱. دریافت رنگ از سیستم استرینگ جدید
+    final categoryColor = ThemeHelper.parsePrimaryColor(theme);
+    final remainingTodos = totalTodos - completedTodos;
+
+    // محاسبه درصد برای نوار پیشرفت سفارشی (بین 0.0 تا 1.0)
+    final double safePercentage =
+        totalTodos == 0 ? 0.0 : (completedTodos / totalTodos).clamp(0.0, 1.0);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        // width و height ثابت حذف شدند تا GridView ابعاد را مدیریت کند
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18), // گوشه‌های نرم‌تر و مدرن
-          color: Theme.of(context).cardColor,
+          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isDark ? Colors.white10 : Colors.black.withOpacity(0.04),
+          ),
           boxShadow: [
             BoxShadow(
-              color: isDark
-                  ? Colors.black26
-                  : Colors.black
-                      .withOpacity(0.04), // سایه نرم و هماهنگ با دارک مود
-              blurRadius: 16,
-              offset: const Offset(0, 6),
+              color: isDark ? Colors.black26 : categoryColor.withOpacity(0.12),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             )
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0, right: 16),
-              child: Hero(
-                tag: 'tag $title',
-                child: ImageIcon(
-                  iconList[iconIndex].image,
-                  color: colorList[colorIndex],
-                  size: 36,
+            // هدر کارت: آیکون با پس‌زمینه محو + دکمه تنظیمات
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: categoryColor.withOpacity(0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Hero(
+                    tag: 'tag_$title',
+                    // ۲. استفاده از سیستم آیکون وکتوری جدید
+                    child: Icon(
+                      AppIcons.getIcon(icon),
+                      color: categoryColor,
+                      size: 28,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      // رنگ داینامیک برای متن اصلی
-                      color: isDark ? Colors.white : Colors.black87,
-                      fontFamily: FontFamily.samim,
-                    ),
+                PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_horiz_rounded,
+                    color: isDark ? Colors.white54 : Colors.black45,
+                    size: 22,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${totalTodos - completedTodos} مأموریت', // خطای منطقی برطرف شد
-                    style: TextStyle(
-                      fontSize: 13,
-                      // رنگ داینامیک برای متن راهنما
-                      color: isDark ? Colors.white54 : Colors.grey.shade600,
-                      decoration: TextDecoration.none,
-                      fontFamily: FontFamily.samim,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      onEdit();
+                    } else if (value == 'delete') {
+                      onDelete();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit_outlined, size: 18),
+                          SizedBox(width: 8),
+                          Text('ویرایش', style: TextStyle(fontSize: 14)),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(18),
-                bottomRight: Radius.circular(18),
-              ),
-              child: StepProgressIndicator(
-                totalSteps: totalTodos == 0 ? 1 : totalTodos,
-                currentStep: completedTodos == 0 ? 0 : completedTodos,
-                size: 6, // کمی ضخیم‌تر برای دید بهتر
-                padding: 0,
-                selectedGradientColor: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colorList[colorIndex],
-                    colorList[colorIndex].withOpacity(0.6),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline_rounded,
+                              size: 18, color: Colors.redAccent),
+                          SizedBox(width: 8),
+                          Text(
+                            'حذف',
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.redAccent),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                ),
-                unselectedColor:
-                    isDark ? Colors.white10 : Colors.black.withOpacity(0.03),
+                )
+              ],
+            ),
+
+            const Spacer(),
+
+            // اطلاعات متنی دسته‌بندی
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : const Color(0xFF1E293B),
+                fontFamily: FontFamily.samim,
               ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              totalTodos == 0
+                  ? 'بدون مأموریت'
+                  : '$remainingTodos مأموریت مانده',
+              style: TextStyle(
+                fontSize: 12,
+                color: isDark ? Colors.white54 : Colors.grey.shade600,
+                fontFamily: FontFamily.samim,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // نوار پیشرفت (Progress Bar) مینیمال و اختصاصی
+            Row(
+              children: [
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Container(
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.white10 : Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 600),
+                            curve: Curves.easeOutCubic,
+                            width: constraints.maxWidth * safePercentage,
+                            decoration: BoxDecoration(
+                              color: categoryColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // ۳. اصلاح خطای سینتکسی فرمول درصد
+                Text(
+                  '${(safePercentage * 100).toInt()}%',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white70 : Colors.grey.shade700,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

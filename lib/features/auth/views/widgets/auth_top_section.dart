@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:todo_infinity_app/core/styles/extensions.dart';
-import 'package:todo_infinity_app/core/styles/text_styles.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/dimens.dart';
-import 'package:todo_infinity_app/core/values/strings.dart';
+import 'package:tikdone_app/core/styles/extensions.dart';
+import 'package:tikdone_app/core/styles/text_styles.dart';
+import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/core/values/dimens.dart';
+import 'package:tikdone_app/core/values/strings.dart';
 
 class AuthTopSection extends StatelessWidget {
   const AuthTopSection({

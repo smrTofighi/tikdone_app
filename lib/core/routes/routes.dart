@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/binding.dart';
-import 'package:todo_infinity_app/core/routes/pages.dart';
-import 'package:todo_infinity_app/features/main/main_page.dart';
-import 'package:todo_infinity_app/features/profile/views/pages/profile_page.dart';
-import 'package:todo_infinity_app/features/search/search_view.dart';
-import 'package:todo_infinity_app/features/splash/splash_page.dart';
-import 'package:todo_infinity_app/features/task/views/pages/task_single_page.dart';
-import 'package:todo_infinity_app/features/task/views/pages/task_list_page.dart';
-import 'package:todo_infinity_app/features/auth/views/pages/login_page.dart';
-import 'package:todo_infinity_app/features/auth/views/pages/signup_page.dart';
+import 'package:tikdone_app/binding.dart';
+import 'package:tikdone_app/core/routes/pages.dart';
+import 'package:tikdone_app/features/main/main_page.dart';
+import 'package:tikdone_app/features/profile/views/pages/profile_page.dart';
+import 'package:tikdone_app/features/search/search_view.dart';
+import 'package:tikdone_app/features/splash/splash_page.dart';
+import 'package:tikdone_app/features/task/views/pages/task_single_page.dart';
+import 'package:tikdone_app/features/task/views/pages/task_list_page.dart';
+import 'package:tikdone_app/features/auth/views/pages/login_page.dart';
+import 'package:tikdone_app/features/auth/views/pages/signup_page.dart';
 
 List<GetPage> routes = [
   GetPage(
@@ -34,7 +34,7 @@ List<GetPage> routes = [
       binding: TaskBinding()),
   GetPage(
     name: PageName.taskSingle,
-    page: () => const TaskSinglePage(),
+    page: () => TaskSinglePage(),
   ),
   GetPage(
     name: PageName.search,

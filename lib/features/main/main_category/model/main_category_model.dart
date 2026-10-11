@@ -3,14 +3,14 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:todo_infinity_app/core/config/appwrite_config.dart';
-import 'package:todo_infinity_app/core/config/storage_key.dart';
-import 'package:todo_infinity_app/core/errors/failure.dart';
-import 'package:todo_infinity_app/core/errors/server_exception.dart';
-import 'package:todo_infinity_app/core/locator/locator.dart';
-import 'package:todo_infinity_app/data/providers/appwrite_provider.dart';
-import 'package:todo_infinity_app/data/models/category_model.dart';
-import 'package:todo_infinity_app/data/services/storage_service.dart';
+import 'package:tikdone_app/core/config/appwrite_config.dart';
+import 'package:tikdone_app/core/config/storage_key.dart';
+import 'package:tikdone_app/core/errors/failure.dart';
+import 'package:tikdone_app/core/errors/server_exception.dart';
+import 'package:tikdone_app/core/locator/locator.dart';
+import 'package:tikdone_app/data/providers/appwrite_provider.dart';
+import 'package:tikdone_app/data/models/category_model.dart';
+import 'package:tikdone_app/data/services/storage_service.dart';
 
 class MainCategoryModel {
   //? a list of categories
@@ -70,7 +70,7 @@ class MainCategoryModel {
         List list = data['documents'].toList();
 
         categoryList =
-            list.map((e) => CategoryModel.fromMap(e['data'])).toList();
+            list.map((e) => CategoryModel.fromJson(e['data'])).toList();
 
         for (final category in categoryList) {
           final completedTodos =
@@ -122,8 +122,8 @@ class MainCategoryModel {
   Future<Either<Failure, Document>> addCategory(
       {required String userId,
       required String title,
-      required int iconIndex,
-      required int colorIndex}) async {
+      required String icon,
+      required String theme}) async {
     try {
       if (await _connectionChecker.hasConnection) {
         String documentId = ID.unique();
@@ -134,16 +134,17 @@ class MainCategoryModel {
           data: {
             "userId": userId,
             "title": title,
-            "icon_index": iconIndex,
-            "color_index": colorIndex,
+            "icon": icon,
+            "theme": theme,
             "id": documentId
           },
         );
         categoryList.add(CategoryModel(
             id: documentId,
             title: title,
-            iconIndex: iconIndex,
-            colorIndex: colorIndex));
+            icon: icon,
+            theme: theme,
+            userId: userId));
         log(document.toString());
         return right(document);
       } else {

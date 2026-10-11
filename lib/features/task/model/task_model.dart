@@ -5,15 +5,15 @@ import 'package:appwrite/models.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:todo_infinity_app/core/config/appwrite_config.dart';
-import 'package:todo_infinity_app/core/config/storage_key.dart';
-import 'package:todo_infinity_app/core/errors/failure.dart';
-import 'package:todo_infinity_app/core/errors/server_exception.dart';
-import 'package:todo_infinity_app/core/locator/locator.dart';
-import 'package:todo_infinity_app/data/models/category_model.dart';
-import 'package:todo_infinity_app/data/models/todo_model.dart';
-import 'package:todo_infinity_app/data/providers/appwrite_provider.dart';
-import 'package:todo_infinity_app/data/services/storage_service.dart';
+import 'package:tikdone_app/core/config/appwrite_config.dart';
+import 'package:tikdone_app/core/config/storage_key.dart';
+import 'package:tikdone_app/core/errors/failure.dart';
+import 'package:tikdone_app/core/errors/server_exception.dart';
+import 'package:tikdone_app/core/locator/locator.dart';
+import 'package:tikdone_app/data/models/category_model.dart';
+import 'package:tikdone_app/data/models/todo_model.dart';
+import 'package:tikdone_app/data/providers/appwrite_provider.dart';
+import 'package:tikdone_app/data/services/storage_service.dart';
 
 class TaskModel {
   late CategoryModel categoryModel;
@@ -33,6 +33,7 @@ class TaskModel {
           collectionId: AppwriteConfig.todoCollectionId,
           documentId: id,
         );
+
         if (isCompleted == false) {
           categoryModel.activeTodos!.removeWhere((element) => element.id == id);
         } else {
@@ -44,7 +45,7 @@ class TaskModel {
 
         return right(document);
       } else {
-        return left(Failure('Check Internet Connection'));
+        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
       }
     } on AppwriteException catch (e) {
       return left(Failure(e.message!));
@@ -55,7 +56,7 @@ class TaskModel {
 
   Future<Either<Failure, Document>> addTodo({
     required String title,
-    required bool isCompleted,
+    required bool completed,
   }) async {
     try {
       if (await _connectionChecker.hasConnection) {
@@ -68,17 +69,29 @@ class TaskModel {
             "userId": _storageService.getValue(StorageKey.userId),
             "title": title,
             "description": description.value,
-            "isComplete": isCompleted,
+            "completed": completed, // اصلاح فیلد دیتابیس
+            "important": false, // فیلد جدید اضافه شد
             'categoryId': categoryModel.id,
             "id": documentId,
           },
         );
+
         categoryModel.activeTodos!.add(
-            TodoModel(id: documentId, title: title, isComplete: isCompleted));
+          TodoModel(
+            id: documentId,
+            title: title,
+            description: description.value,
+            categoryId: categoryModel.id,
+            userId: _storageService.getValue(StorageKey.userId),
+            completed: completed, // استفاده از نام جدید متغیر در مدل
+            important: false,
+          ),
+        );
         categoryModel.totalTodos = categoryModel.totalTodos + 1;
+
         return right(document);
       } else {
-        return left(Failure('Check Internet Connection'));
+        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
       }
     } on AppwriteException catch (e) {
       return left(Failure(e.message!));
@@ -87,11 +100,12 @@ class TaskModel {
     }
   }
 
-  Future<Either<Failure, Document>> updateTodo(
-      {required String documentId,
-      required String title,
-      required bool isCompleted,
-      required int index}) async {
+  Future<Either<Failure, Document>> updateTodo({
+    required String documentId,
+    required String title,
+    required bool isCompleted,
+    required int index,
+  }) async {
     try {
       if (await _connectionChecker.hasConnection) {
         Document document = await _appwrite.databases!.updateDocument(
@@ -100,10 +114,11 @@ class TaskModel {
           documentId: documentId,
           data: {
             "title": title,
-            "isComplete": isCompleted,
+            "completed": isCompleted, // اصلاح فیلد دیتابیس
             "description": description.value
           },
         );
+
         if (isCompleted == false) {
           categoryModel.activeTodos![index]
             ..title = title
@@ -116,7 +131,7 @@ class TaskModel {
         log(document.data.toString());
         return right(document);
       } else {
-        return left(Failure('Check Internet Connection'));
+        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
       }
     } on AppwriteException catch (e) {
       return left(Failure(e.message!));
@@ -138,9 +153,10 @@ class TaskModel {
               _storageService.getValue(StorageKey.userId),
             ),
             Query.equal('categoryId', categoryModel.id),
-            Query.equal('isComplete', false)
+            Query.equal('completed', false) // اصلاح فیلد در کوئری
           ],
         );
+
         DocumentList responseUnActiveTodo =
             await _appwrite.databases!.listDocuments(
           databaseId: AppwriteConfig.databaseId,
@@ -149,25 +165,28 @@ class TaskModel {
             Query.equal(
               'userId',
               _storageService.getValue(StorageKey.userId),
-            ), // فیلتر بر اساس userId
+            ),
             Query.equal('categoryId', categoryModel.id),
-            Query.equal('isComplete', true)
+            Query.equal('completed', true) // اصلاح فیلد در کوئری
           ],
         );
+
         log(responseActiveTodo.documents.toString());
+
+        // استفاده از fromJson مطابق با آپدیت مدل جدید
         categoryModel.unActiveTodos = responseUnActiveTodo.documents
-            .map((doc) => TodoModel.fromMap(doc.data))
+            .map((doc) => TodoModel.fromJson(doc.data))
             .toList()
             .obs;
 
         categoryModel.activeTodos = responseActiveTodo.documents
-            .map((doc) => TodoModel.fromMap(doc.data))
+            .map((doc) => TodoModel.fromJson(doc.data))
             .toList()
             .obs;
 
-        return right(categoryModel.activeTodos!);
+        return right(categoryModel.activeTodos! as List<TodoModel>);
       } else {
-        return left(Failure('Check Your Internet Connection'));
+        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
       }
     } on AppwriteException catch (e) {
       return left(Failure(e.message!));
@@ -176,31 +195,41 @@ class TaskModel {
     }
   }
 
-  Future<Either<Failure, Document>> updateIsCompleted(
-      {required String id, required bool isComplete}) async {
+  Future<Either<Failure, Document>> updateIsCompleted({
+    required String id,
+    required bool isComplete, // مقدار جدید تیک (true یا false)
+  }) async {
     try {
       final document = await _appwrite.databases!.updateDocument(
         collectionId: AppwriteConfig.todoCollectionId,
         databaseId: AppwriteConfig.databaseId,
         documentId: id,
         data: {
-          'isComplete': isComplete,
+          'completed': isComplete, // اصلاح فیلد دیتابیس
         },
       );
-      if (!isComplete == false) {
+
+      // منطق تمیز و اصلاح‌شده برای جابجایی تسک بین لیست فعال و انجام‌شده
+      if (isComplete) {
+        // تسک انجام شد: انتقال از فعال به غیرفعال
         var todo = categoryModel.activeTodos!
             .firstWhere((element) => element.id == id);
-        todo.isComplete = isComplete;
+        todo.completed = true;
         categoryModel.activeTodos!.remove(todo);
         categoryModel.unActiveTodos!.add(todo);
+        categoryModel.completedTodos = categoryModel.completedTodos +
+            1; // اضافه کردن به تعداد انجام شده‌ها
       } else {
+        // تیک تسک برداشته شد: انتقال از غیرفعال به فعال
         var todo = categoryModel.unActiveTodos!
             .firstWhere((element) => element.id == id);
-        todo.isComplete = isComplete;
+        todo.completed = false;
         categoryModel.unActiveTodos!.remove(todo);
         categoryModel.activeTodos!.add(todo);
-        categoryModel.completedTodos = categoryModel.completedTodos - 1;
+        categoryModel.completedTodos =
+            categoryModel.completedTodos - 1; // کسر از تعداد انجام شده‌ها
       }
+
       log(document.data.toString());
       return right(document);
     } catch (e) {

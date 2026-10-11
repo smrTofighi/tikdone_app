@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:todo_infinity_app/binding.dart';
-import 'package:todo_infinity_app/core/locator/locator.dart';
-import 'package:todo_infinity_app/core/routes/pages.dart';
-import 'package:todo_infinity_app/core/routes/routes.dart';
+import 'package:tikdone_app/binding.dart';
+import 'package:tikdone_app/core/locator/locator.dart';
+import 'package:tikdone_app/core/routes/pages.dart';
+import 'package:tikdone_app/core/routes/routes.dart';
 
 import 'core/themes/light_theme.dart';
 

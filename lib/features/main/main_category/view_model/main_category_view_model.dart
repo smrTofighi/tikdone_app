@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/config/storage_key.dart';
-import 'package:todo_infinity_app/core/locator/locator.dart';
-import 'package:todo_infinity_app/core/routes/pages.dart';
-import 'package:todo_infinity_app/core/utils/custom_snackbar.dart';
-import 'package:todo_infinity_app/data/models/category_model.dart';
-import 'package:todo_infinity_app/data/services/storage_service.dart';
-import 'package:todo_infinity_app/features/main/main_category/model/main_category_model.dart';
-import 'package:todo_infinity_app/features/task/view_model/task_view_model.dart';
+import 'package:tikdone_app/core/config/storage_key.dart';
+import 'package:tikdone_app/core/locator/locator.dart';
+import 'package:tikdone_app/core/routes/pages.dart';
+import 'package:tikdone_app/core/utils/custom_snackbar.dart';
+import 'package:tikdone_app/data/models/category_model.dart';
+import 'package:tikdone_app/data/services/storage_service.dart';
+import 'package:tikdone_app/features/main/main_category/model/main_category_model.dart';
+import 'package:tikdone_app/features/task/view_model/task_view_model.dart';
 import '../../../../core/utils/bottom_sheet_category.dart';
 import '../../../../core/values/strings.dart';
 
@@ -54,15 +54,15 @@ class MainCategoryViewModel extends GetxController {
 
   void addCategory(
       {required String title,
-      required int iconIndex,
-      required int colorIndex,
+      required String iconString,
+      required String themeString,
       required BuildContext context}) async {
     isLoadingBottomSheet(true);
     var userId = _storageService.getValue(StorageKey.userId);
     var res = await _model.addCategory(
       title: title,
-      iconIndex: iconIndex,
-      colorIndex: colorIndex,
+      theme: iconString,
+      icon: themeString,
       userId: userId,
     );
     res.fold(

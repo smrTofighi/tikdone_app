@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
+import 'package:tikdone_app/core/values/colors.dart';
 
 class MyFloatingActionButton extends StatelessWidget {
   const MyFloatingActionButton(

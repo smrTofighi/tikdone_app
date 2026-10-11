@@ -6,7 +6,7 @@
    <application
    
         android:enableOnBackInvokedCallback="true"
-        android:label="todo_infinity_app"
+        android:label="تیک‌دان"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

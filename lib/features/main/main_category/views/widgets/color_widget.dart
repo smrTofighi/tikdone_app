@@ -11,7 +11,7 @@ class ColorWidget extends StatelessWidget {
       child: AnimatedContainer(
         curve: Curves.easeInOutQuint,
         duration: const Duration(milliseconds: 500),
-        width: 26,
+        width: 40,
         height: 26,
         decoration: BoxDecoration(
           color: color,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:todo_infinity_app/core/styles/text_styles.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/dimens.dart';
+import 'package:tikdone_app/core/styles/text_styles.dart';
+import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/core/values/dimens.dart';
 
 class AuthTile extends StatelessWidget {
   const AuthTile({

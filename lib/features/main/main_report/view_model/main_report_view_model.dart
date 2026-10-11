@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/utils/custom_snackbar.dart';
-import 'package:todo_infinity_app/features/main/main_report/model/main_report_model.dart';
+import 'package:tikdone_app/core/utils/custom_snackbar.dart';
+import 'package:tikdone_app/features/main/main_report/model/main_report_model.dart';
 
 class MainReportViewModel extends GetxController {
   late MainReportModel _model;

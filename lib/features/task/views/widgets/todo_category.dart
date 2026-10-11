@@ -1,53 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/values/dimens.dart';
-import 'package:todo_infinity_app/core/values/icons.dart';
-
+import 'package:tikdone_app/core/values/dimens.dart';
 
 class TaskSinglePageCategory extends StatelessWidget {
-  const TaskSinglePageCategory(
-      {super.key,
-      required this.title,
-      required this.bgColor,
-      required this.isEmpty,
-      required this.icon,
-      required this.onTap});
+  const TaskSinglePageCategory({
+    super.key,
+    required this.title,
+    required this.bgColor,
+    required this.isEmpty,
+    required this.icon,
+    required this.onTap,
+  });
 
   final String title;
   final Color bgColor;
   final RxBool isEmpty;
-  final ImageProvider icon;
-  final Function() onTap;
+  final IconData icon; // تغییر از ImageProvider به IconData
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        alignment: Alignment.center,
-        width: 100,
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppDimens.radius),
-          color: isEmpty.value ? Colors.transparent : bgColor.withOpacity(0.8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ImageIcon(
-              isEmpty.value ? MyIcons.tags.image : icon,
-              size: 20,
-              color: isEmpty.value ? Colors.grey : Colors.white,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Obx(
+      () => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppDimens.radius),
+            color: isEmpty.value
+                ? (isDark ? Colors.white10 : Colors.grey.shade200)
+                : bgColor.withOpacity(0.18),
+            border: Border.all(
+              color:
+                  isEmpty.value ? Colors.transparent : bgColor.withOpacity(0.4),
+              width: 1.2,
             ),
-            Text(
-              isEmpty.value ? 'انتخاب دسته بندی' : title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-                color: isEmpty.value ? Colors.grey : Colors.white,
+          ),
+          child: Row(
+            mainAxisSize:
+                MainAxisSize.min, // حذف عرض ثابت ۱۰۰ برای جلوگیری از Overflow
+            children: [
+              Icon(
+                isEmpty.value ? Icons.label_outline_rounded : icon,
+                size: 18,
+                color: isEmpty.value
+                    ? (isDark ? Colors.white54 : Colors.grey.shade600)
+                    : bgColor,
               ),
-            ),
-          ],
+              const SizedBox(width: 8),
+              Text(
+                isEmpty.value ? 'انتخاب دسته‌بندی' : title,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isEmpty.value
+                      ? (isDark ? Colors.white54 : Colors.grey.shade600)
+                      : (isDark ? Colors.white : bgColor),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

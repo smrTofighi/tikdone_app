@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 import '../../../core/values/dimens.dart';
 import '../../../core/values/icons.dart';
@@ -20,8 +21,8 @@ class SearchTaskWidget extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  ImageIcon(
-                    MyIcons.car.image,
+                  Icon(
+                    EvaIcons.car,
                     size: 26,
                     color: Colors.red,
                   ),
@@ -54,8 +55,8 @@ class SearchTaskWidget extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      ImageIcon(
-                        MyIcons.calendar.image,
+                      Icon(
+                        EvaIcons.calendar,
                         size: 14,
                         color: Colors.red,
                       ),
@@ -69,8 +70,8 @@ class SearchTaskWidget extends StatelessWidget {
                       const SizedBox(
                         width: 24.0,
                       ),
-                      ImageIcon(
-                        MyIcons.clock.image,
+                      Icon(
+                        EvaIcons.clock,
                         size: 14,
                         color: Colors.red,
                       ),

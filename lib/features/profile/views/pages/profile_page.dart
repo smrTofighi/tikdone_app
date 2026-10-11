@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/styles/text_styles.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/dimens.dart';
-import 'package:todo_infinity_app/core/values/icons.dart';
-import 'package:todo_infinity_app/features/profile/view_model/profile_view_model.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:tikdone_app/core/styles/text_styles.dart';
+import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/core/values/dimens.dart';
+import 'package:tikdone_app/core/values/icons.dart';
+import 'package:tikdone_app/features/profile/view_model/profile_view_model.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -30,8 +31,8 @@ class ProfilePage extends StatelessWidget {
               Get.back();
             },
             color: Colors.black,
-            icon: ImageIcon(
-              MyIcons.arrowRight.image,
+            icon: const Icon(
+              EvaIcons.arrow_left,
               size: 22,
             ),
           ),

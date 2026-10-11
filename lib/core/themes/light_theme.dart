@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_infinity_app/core/gen/fonts.gen.dart';
-import 'package:todo_infinity_app/core/styles/text_styles.dart';
+import 'package:tikdone_app/core/gen/fonts.gen.dart';
+import 'package:tikdone_app/core/styles/text_styles.dart';
 import '../values/colors.dart';
 
 ThemeData lightTheme() {

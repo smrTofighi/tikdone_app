@@ -3,14 +3,14 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:todo_infinity_app/core/config/appwrite_config.dart';
-import 'package:todo_infinity_app/core/config/storage_key.dart';
-import 'package:todo_infinity_app/core/errors/failure.dart';
-import 'package:todo_infinity_app/core/errors/server_exception.dart';
-import 'package:todo_infinity_app/core/locator/locator.dart';
-import 'package:todo_infinity_app/data/models/user_model.dart';
-import 'package:todo_infinity_app/data/providers/appwrite_provider.dart';
-import 'package:todo_infinity_app/data/services/storage_service.dart';
+import 'package:tikdone_app/core/config/appwrite_config.dart';
+import 'package:tikdone_app/core/config/storage_key.dart';
+import 'package:tikdone_app/core/errors/failure.dart';
+import 'package:tikdone_app/core/errors/server_exception.dart';
+import 'package:tikdone_app/core/locator/locator.dart';
+import 'package:tikdone_app/data/models/user_model.dart';
+import 'package:tikdone_app/data/providers/appwrite_provider.dart';
+import 'package:tikdone_app/data/services/storage_service.dart';
 
 class AuthModel {
   final _connectionChecker = locator<InternetConnectionChecker>();

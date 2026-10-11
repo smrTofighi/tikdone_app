@@ -1,8 +1,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/features/auth/view_model/auth_view_model.dart';
-import 'package:todo_infinity_app/features/profile/model/profile_model.dart';
+import 'package:tikdone_app/features/auth/view_model/auth_view_model.dart';
+import 'package:tikdone_app/features/profile/model/profile_model.dart';
 
 class ProfileViewModel extends GetxController {
   late ProfileModel _model;

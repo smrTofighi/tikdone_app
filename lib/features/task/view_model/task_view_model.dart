@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/data/models/category_model.dart';
-import 'package:todo_infinity_app/data/models/todo_model.dart';
-import 'package:todo_infinity_app/features/task/model/task_model.dart';
+import 'package:tikdone_app/data/models/category_model.dart';
+import 'package:tikdone_app/data/models/todo_model.dart';
+import 'package:tikdone_app/features/task/model/task_model.dart';
 
 class TaskViewModel extends GetxController {
   final RxBool isLoading = RxBool(false);
@@ -24,7 +24,7 @@ class TaskViewModel extends GetxController {
   void deleteTodo(TodoModel todo) async {
     isLoadingUpdate(true);
     var res =
-        await _model.deleteTodo(id: todo.id, isCompleted: todo.isComplete);
+        await _model.deleteTodo(id: todo.id, isCompleted: todo.completed);
     res.fold(
       (l) {
         isLoadingUpdate(false);
@@ -40,7 +40,7 @@ class TaskViewModel extends GetxController {
     var response = await _model.updateTodo(
         documentId: todoModel.id,
         title: todoModel.title,
-        isCompleted: todoModel.isComplete,
+        isCompleted: todoModel.completed,
         index: todoIndex);
     response.fold(
       (l) {
@@ -114,7 +114,7 @@ class TaskViewModel extends GetxController {
   void addTodo() async {
     isLoading(true);
     var res = await _model.addTodo(
-        title: todoEditingController.text, isCompleted: false);
+        title: todoEditingController.text,completed: false);
     res.fold(
       (failure) {
         isLoading(false);

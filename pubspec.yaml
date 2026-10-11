@@ -1,4 +1,4 @@
-name: todo_infinity_app
+name: tikdone_app
 description: A new Flutter project.
 #? -------------------------------------------
 publish_to: 'none' 
@@ -41,6 +41,7 @@ dependencies:
   intl: 0.20.3
   fl_chart: ^0.69.0
   image_picker: ^1.1.2
+  icons_plus: ^5.0.0
 #? -------------------------------------------
 dev_dependencies:
   flutter_test:

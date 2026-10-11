@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/styles/extensions.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/core/values/dimens.dart';
-import 'package:todo_infinity_app/core/values/icons.dart';
-import 'package:todo_infinity_app/core/values/strings.dart';
-import 'package:todo_infinity_app/features/main/main_category/view_model/main_category_view_model.dart';
-import 'package:todo_infinity_app/features/task/view_model/task_view_model.dart';
-import 'package:todo_infinity_app/features/task/views/widgets/task_single_text_field.dart';
-import 'package:todo_infinity_app/features/task/views/widgets/todo_category.dart';
-
+import 'package:tikdone_app/core/values/colors.dart'; // حاوی ThemeHelper
+import 'package:tikdone_app/core/values/dimens.dart';
+import 'package:tikdone_app/core/values/icons.dart'; // حاوی AppIcons
+import 'package:tikdone_app/core/values/strings.dart';
+import 'package:tikdone_app/features/main/main_category/view_model/main_category_view_model.dart';
+import 'package:tikdone_app/features/task/view_model/task_view_model.dart';
+import 'package:tikdone_app/features/task/views/widgets/task_single_text_field.dart';
+import 'package:tikdone_app/features/task/views/widgets/todo_category.dart';
 import '../../../../../core/styles/text_styles.dart';
 import '../widgets/task_note_unactiove.dart';
 
@@ -29,12 +27,23 @@ class _TaskSinglePageState extends State<TaskSinglePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final currentColor =
+        ThemeHelper.parsePrimaryColor(taskVM.model.categoryModel.theme);
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.backGround,
+        backgroundColor:
+            isDark ? const Color(0xFF0F172A) : AppColors.backGround,
         appBar: AppBar(
-          title: Text(taskVM.isEditing.value ? PersianStrings.editTask: PersianStrings.newTask,
-              style: AppTextStyles.titleOfAppBar),
+          title: Text(
+            taskVM.isEditing.value
+                ? PersianStrings.editTask
+                : PersianStrings.newTask,
+            style: AppTextStyles.titleOfAppBar.copyWith(
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
           centerTitle: true,
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -43,11 +52,8 @@ class _TaskSinglePageState extends State<TaskSinglePage> {
               taskVM.clearSingleTodoAfterAdd();
               Get.back();
             },
-            color: Colors.black,
-            icon: ImageIcon(
-              MyIcons.arrowRight.image,
-              size: 22,
-            ),
+            color: isDark ? Colors.white : Colors.black87,
+            icon: const Icon(Icons.arrow_back_rounded, size: 24),
           ),
         ),
         body: Padding(
@@ -62,13 +68,13 @@ class _TaskSinglePageState extends State<TaskSinglePage> {
                   categoryModel: taskVM.model.categoryModel,
                   onChanged: (value) {},
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == null || value.isEmpty) {
                       return PersianStrings.requiredText;
                     }
                     return null;
                   },
                 ),
-                (AppDimens.medium * 2).height,
+                Gap(AppDimens.medium * 2),
                 Obx(
                   () => taskVM.isActiveNote.value
                       ? TaskSinglePageTextField(
@@ -82,19 +88,23 @@ class _TaskSinglePageState extends State<TaskSinglePage> {
                           },
                           icon: GestureDetector(
                             onTap: () => taskVM.isActiveNote(false),
-                            child: const Icon(Icons.close),
+                            child: Icon(Icons.close_rounded,
+                                color: Colors.grey.shade400),
                           ),
                         )
                           .animate(delay: const Duration(milliseconds: 250))
                           .fade()
                       : TaskNoteUnActive(),
                 ),
-                (AppDimens.medium * 2).height,
-                const Align(
+                Gap(AppDimens.medium * 2),
+                Align(
                   alignment: Alignment.centerRight,
                   child: Text(
                     'دسته بندی :',
-                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                    style: TextStyle(
+                      color: isDark ? Colors.white54 : Colors.grey,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
                 Gap(AppDimens.high),
@@ -102,15 +112,13 @@ class _TaskSinglePageState extends State<TaskSinglePage> {
                   alignment: Alignment.centerRight,
                   child: TaskSinglePageCategory(
                     title: taskVM.model.categoryModel.title,
-                    bgColor: colorList[taskVM.model.categoryModel.colorIndex],
+                    bgColor: currentColor,
                     isEmpty: taskVM.model.categoryModel.title.isEmpty.obs,
-                    icon: iconList[taskVM.model.categoryModel.iconIndex].image,
-                    onTap: () {
-                      //taskCategoryBottomSheet(context);
-                    },
+                    // ارسال آیکون جدید وکتوری به ویجت دسته بندی
+                    icon: AppIcons.getIcon(taskVM.model.categoryModel.icon),
+                    onTap: () {},
                   ),
                 ),
-                Gap(AppDimens.high),
               ],
             ),
           ),
@@ -130,40 +138,46 @@ class AddEditTaskBottomNavigation extends StatelessWidget {
   });
 
   final GlobalKey<FormState> formKey;
-
   final TaskViewModel taskVM = Get.find<TaskViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: AppDimens.infinity,
-      height: 55,
-      child: ElevatedButton(
-        onPressed: () {
-          if (formKey.currentState!.validate()) {
-            if(taskVM.isEditing.value){
-              taskVM.updateTodo();
+    final currentColor =
+        ThemeHelper.parsePrimaryColor(taskVM.model.categoryModel.theme);
+
+    // تغییر ظاهر دکمه از حالت مستطیل چسبیده به حالت شناور و مدرن
+    return Padding(
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 8),
+      child: SizedBox(
+        width: double.infinity,
+        height: 56,
+        child: ElevatedButton(
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              if (taskVM.isEditing.value) {
+                taskVM.updateTodo();
+              } else {
+                taskVM.addTodo();
+              }
+              Get.back();
             }
-            else {
-              taskVM.addTodo();
-            }
-            Get.back();
-          }
-        },
-        style: ButtonStyle(
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              // Change your radius here
-              borderRadius: BorderRadius.circular(0),
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: currentColor,
+            foregroundColor: Colors.white,
+            elevation: 8,
+            shadowColor: currentColor.withOpacity(0.4),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
-          backgroundColor: WidgetStateProperty.all(
-            colorList[taskVM.model.categoryModel.colorIndex],
+          child: Text(
+            taskVM.isEditing.value ? PersianStrings.edit : PersianStrings.add,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        child: Text(
-          taskVM.isEditing.value ? PersianStrings.edit :
-          PersianStrings.add,
         ),
       ),
     );

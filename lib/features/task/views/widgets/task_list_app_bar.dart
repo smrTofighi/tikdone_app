@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/values/icons.dart';
-import 'package:todo_infinity_app/features/main/main_category/view_model/main_category_view_model.dart';
-import 'package:todo_infinity_app/features/task/view_model/task_view_model.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:tikdone_app/core/values/icons.dart';
+import 'package:tikdone_app/features/main/main_category/view_model/main_category_view_model.dart';
+import 'package:tikdone_app/features/task/view_model/task_view_model.dart';
 
 class TaskListAppBar extends StatelessWidget {
   const TaskListAppBar({
@@ -23,8 +24,8 @@ class TaskListAppBar extends StatelessWidget {
               Get.delete<TaskViewModel>();
               Get.back();
             },
-            icon: ImageIcon(
-              MyIcons.arrowRight.image,
+            icon: Icon(
+              EvaIcons.arrow_left,
               color: Colors.white,
             ),
           ),

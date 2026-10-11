@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:appwrite/models.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/config/storage_key.dart';
-import 'package:todo_infinity_app/core/locator/locator.dart';
-import 'package:todo_infinity_app/core/routes/pages.dart';
-import 'package:todo_infinity_app/data/services/storage_service.dart';
-import 'package:todo_infinity_app/core/utils/custom_snackbar.dart';
-import 'package:todo_infinity_app/features/auth/model/auth_model.dart';
+import 'package:tikdone_app/core/config/storage_key.dart';
+import 'package:tikdone_app/core/locator/locator.dart';
+import 'package:tikdone_app/core/routes/pages.dart';
+import 'package:tikdone_app/data/services/storage_service.dart';
+import 'package:tikdone_app/core/utils/custom_snackbar.dart';
+import 'package:tikdone_app/features/auth/model/auth_model.dart';
 
 class AuthViewModel extends GetxController {
   late AuthModel _model;

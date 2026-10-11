@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/routes/pages.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:tikdone_app/core/routes/pages.dart';
 import '../../../../../core/values/colors.dart';
 import '../../../../../core/values/dimens.dart';
 import '../../../../../core/values/icons.dart';
@@ -22,7 +23,7 @@ class AppDrawer extends StatelessWidget {
           children: [
             DrawerWidget(
               title: 'حساب کاربری',
-              icon: MyIcons.user.image,
+              icon: EvaIcons.person,
               color: AppColors.primary,
               onTap: () {
                 Get.toNamed(PageName.profile);
@@ -33,13 +34,13 @@ class AppDrawer extends StatelessWidget {
             ),
             DrawerWidget(
               title: 'درباره ما',
-              icon: MyIcons.questionSquare.image,
+              icon: EvaIcons.info,
               color: AppColors.primary,
               onTap: () {},
             ),
             DrawerWidget(
               title: 'معرفی به دوستان',
-              icon: MyIcons.share.image,
+              icon: EvaIcons.share,
               color: AppColors.primary,
               onTap: () {},
             ),
@@ -48,7 +49,7 @@ class AppDrawer extends StatelessWidget {
             ),
             DrawerWidget(
               title: 'خروج',
-              icon: MyIcons.power.image,
+              icon: EvaIcons.log_out,
               color: AppColors.redText,
               onTap: () {},
             ),
@@ -67,7 +68,7 @@ class DrawerWidget extends StatelessWidget {
       required this.color,
       required this.onTap});
   final String title;
-  final ImageProvider icon;
+  final IconData icon;
   final Color color;
   final Function() onTap;
   @override
@@ -82,7 +83,7 @@ class DrawerWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                ImageIcon(
+                Icon(
                   icon,
                   size: 19,
                   color: color,

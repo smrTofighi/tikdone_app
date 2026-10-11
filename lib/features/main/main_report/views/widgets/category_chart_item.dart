@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:todo_infinity_app/core/values/dimens.dart';
+import 'package:tikdone_app/core/values/dimens.dart';
 
 class CategoryChartItem extends StatelessWidget {
   const CategoryChartItem({super.key, required this.title, required this.color});

@@ -2,13 +2,13 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:todo_infinity_app/core/gen/assets.gen.dart';
-import 'package:todo_infinity_app/core/values/colors.dart';
-import 'package:todo_infinity_app/features/main/widgets/mydrawer_widget.dart';
-import 'package:todo_infinity_app/features/main/main_category/views/pages/main_category_page.dart';
-import 'package:todo_infinity_app/features/main/main_category/view_model/main_category_view_model.dart';
-import 'package:todo_infinity_app/features/main/main_report/view_model/main_report_view_model.dart';
-import 'package:todo_infinity_app/features/main/main_report/views/page/report_page.dart';
+import 'package:tikdone_app/core/gen/assets.gen.dart';
+import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/features/main/widgets/mydrawer_widget.dart';
+import 'package:tikdone_app/features/main/main_category/views/pages/main_category_page.dart';
+import 'package:tikdone_app/features/main/main_category/view_model/main_category_view_model.dart';
+import 'package:tikdone_app/features/main/main_report/view_model/main_report_view_model.dart';
+import 'package:tikdone_app/features/main/main_report/views/page/report_page.dart';
 import 'widgets/floating_action_button.dart';
 
 // ignore: must_be_immutable
