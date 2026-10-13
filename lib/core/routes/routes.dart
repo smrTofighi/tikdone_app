@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:tikdone_app/binding.dart';
 import 'package:tikdone_app/core/routes/pages.dart';
+import 'package:tikdone_app/features/auth/views/pages/auth_page.dart';
 import 'package:tikdone_app/features/main/main_page.dart';
 import 'package:tikdone_app/features/profile/views/pages/profile_page.dart';
 import 'package:tikdone_app/features/search/search_view.dart';
@@ -24,6 +25,10 @@ List<GetPage> routes = [
     page: () => const SplashPage(),
   ),
   GetPage(
+    name: PageName.auth,
+    page: () => AuthPage(),
+  ),
+  GetPage(
     name: PageName.main,
     page: () => MainPage(),
     bindings: [CategoryBinding(), TaskBinding(), ReportBinding()],
@@ -41,8 +46,7 @@ List<GetPage> routes = [
     page: () => const SearchView(),
   ),
   GetPage(
-    name: PageName.profile,
-    page: () =>  ProfilePage(),
-    binding: ProfileBinding()
-  ),
+      name: PageName.profile,
+      page: () => ProfilePage(),
+      binding: ProfileBinding()),
 ];

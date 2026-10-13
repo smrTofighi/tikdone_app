@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.todo_infinity_app"
+    namespace = "com.vornacode.tikdone"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

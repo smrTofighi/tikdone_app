@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tikdone_app/core/gen/fonts.gen.dart';
 import 'package:tikdone_app/core/values/colors.dart'; // برای ThemeHelper
-import 'package:tikdone_app/core/values/icons.dart'; // برای AppIcons
+import 'package:tikdone_app/core/values/icons.dart';
+import 'package:tikdone_app/gen/fonts.gen.dart'; // برای AppIcons
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({

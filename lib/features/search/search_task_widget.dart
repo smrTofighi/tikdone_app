@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import '../../../core/values/dimens.dart';
-import '../../../core/values/icons.dart';
 
 class SearchTaskWidget extends StatelessWidget {
   const SearchTaskWidget({
@@ -22,7 +21,7 @@ class SearchTaskWidget extends StatelessWidget {
               Column(
                 children: [
                   Icon(
-                    EvaIcons.car,
+                    FluentIcons.vehicle_car_24_regular,
                     size: 26,
                     color: Colors.red,
                   ),
@@ -56,7 +55,7 @@ class SearchTaskWidget extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        EvaIcons.calendar,
+                        FluentIcons.calendar_16_regular,
                         size: 14,
                         color: Colors.red,
                       ),
@@ -71,7 +70,7 @@ class SearchTaskWidget extends StatelessWidget {
                         width: 24.0,
                       ),
                       Icon(
-                        EvaIcons.clock,
+                        FluentIcons.clock_16_regular,
                         size: 14,
                         color: Colors.red,
                       ),

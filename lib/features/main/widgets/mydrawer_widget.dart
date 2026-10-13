@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:tikdone_app/core/routes/pages.dart';
 import '../../../../../core/values/colors.dart';
 import '../../../../../core/values/dimens.dart';
-import '../../../../../core/values/icons.dart';
 
 // ignore: must_be_immutable
 class AppDrawer extends StatelessWidget {
@@ -23,7 +22,7 @@ class AppDrawer extends StatelessWidget {
           children: [
             DrawerWidget(
               title: 'حساب کاربری',
-              icon: EvaIcons.person,
+              icon: FluentIcons.person_24_regular,
               color: AppColors.primary,
               onTap: () {
                 Get.toNamed(PageName.profile);
@@ -34,13 +33,13 @@ class AppDrawer extends StatelessWidget {
             ),
             DrawerWidget(
               title: 'درباره ما',
-              icon: EvaIcons.info,
+              icon: FluentIcons.info_20_regular,
               color: AppColors.primary,
               onTap: () {},
             ),
             DrawerWidget(
               title: 'معرفی به دوستان',
-              icon: EvaIcons.share,
+              icon: FluentIcons.share_20_regular,
               color: AppColors.primary,
               onTap: () {},
             ),
@@ -49,8 +48,8 @@ class AppDrawer extends StatelessWidget {
             ),
             DrawerWidget(
               title: 'خروج',
-              icon: EvaIcons.log_out,
-              color: AppColors.redText,
+              icon: FluentIcons.sign_out_20_regular,
+              color: AppColors.error,
               onTap: () {},
             ),
           ],

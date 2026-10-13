@@ -23,7 +23,7 @@ class AuthTile extends StatelessWidget {
         Gap(AppDimens.small),
         Text(
           subtitle,
-          style: AppTextStyles.normal12(AppColors.greyText),
+          style: AppTextStyles.normal12(AppColors.grey),
         ),
       ],
     );

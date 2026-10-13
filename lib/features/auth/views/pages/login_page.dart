@@ -56,13 +56,13 @@ class _LogInPageState extends State<LogInPage> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryBG.withOpacity(0.1),
+                        color: AppColors.primary.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.task_alt_rounded, // آیکون جدید و مرتبط با تیک‌دان
                         size: 48,
-                        color: AppColors.primaryBG,
+                        color: AppColors.primary,
                       ),
                     ).animate().scale(
                         delay: 100.ms,
@@ -105,7 +105,7 @@ class _LogInPageState extends State<LogInPage> {
                             BoxShadow(
                               color: isDark
                                   ? Colors.black26
-                                  : AppColors.primaryBG.withOpacity(0.05),
+                                  : AppColors.primary.withOpacity(0.05),
                               blurRadius: 32,
                               offset: const Offset(0, 12),
                             ),
@@ -123,7 +123,7 @@ class _LogInPageState extends State<LogInPage> {
                               decoration: InputDecoration(
                                 labelText: 'ایمیل',
                                 prefixIcon: Icon(Icons.alternate_email_rounded,
-                                    color: AppColors.primaryBG),
+                                    color: AppColors.primary),
                                 filled: true,
                                 fillColor: isDark
                                     ? const Color(0xFF0F172A)
@@ -151,7 +151,7 @@ class _LogInPageState extends State<LogInPage> {
                               decoration: InputDecoration(
                                 labelText: 'رمز عبور',
                                 prefixIcon: Icon(Icons.lock_outline_rounded,
-                                    color: AppColors.primaryBG),
+                                    color: AppColors.primary),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _isPasswordObscure
@@ -185,7 +185,7 @@ class _LogInPageState extends State<LogInPage> {
                               child: Obx(
                                 () => ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primaryBG,
+                                    backgroundColor: AppColors.primary,
                                     foregroundColor: Colors.white,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
@@ -242,7 +242,7 @@ class _LogInPageState extends State<LogInPage> {
                           child: Text(
                             PersianStrings.signup,
                             style: TextStyle(
-                                color: AppColors.primaryBG,
+                                color: AppColors.primary,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),

@@ -60,13 +60,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryBG.withOpacity(0.1),
+                        color: AppColors.primary.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.person_add_alt_1_rounded,
                         size: 44,
-                        color: AppColors.primaryBG,
+                        color: AppColors.primary,
                       ),
                     ).animate().scale(
                         delay: 100.ms,
@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             BoxShadow(
                               color: isDark
                                   ? Colors.black26
-                                  : AppColors.primaryBG.withOpacity(0.05),
+                                  : AppColors.primary.withOpacity(0.05),
                               blurRadius: 32,
                               offset: const Offset(0, 12),
                             ),
@@ -181,7 +181,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               decoration: InputDecoration(
                                 labelText: 'ایمیل',
                                 prefixIcon: Icon(Icons.alternate_email_rounded,
-                                    color: AppColors.primaryBG),
+                                    color: AppColors.primary),
                                 filled: true,
                                 fillColor: isDark
                                     ? const Color(0xFF0F172A)
@@ -208,7 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               decoration: InputDecoration(
                                 labelText: 'رمز عبور',
                                 prefixIcon: Icon(Icons.lock_outline_rounded,
-                                    color: AppColors.primaryBG),
+                                    color: AppColors.primary),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _isPasswordObscure
@@ -243,7 +243,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               child: Obx(
                                 () => ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primaryBG,
+                                    backgroundColor: AppColors.primary,
                                     foregroundColor: Colors.white,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
@@ -303,7 +303,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           child: Text(
                             PersianStrings.signin,
                             style: TextStyle(
-                                color: AppColors.primaryBG,
+                                color: AppColors.primary,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),

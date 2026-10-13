@@ -10,6 +10,7 @@ import 'package:tikdone_app/core/routes/routes.dart';
 import 'core/themes/light_theme.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   setUpLocator();
   runApp(

@@ -16,7 +16,7 @@ class AppBoxDecoration {
 
   static BoxDecoration taskWidgetDecoration = BoxDecoration(
     borderRadius: BorderRadius.circular(AppDimens.radius),
-    color: AppColors.card,
+    color: AppColors.cardLight,
     boxShadow: [
       BoxShadow(
           color: Colors.black.withOpacity(0.2),

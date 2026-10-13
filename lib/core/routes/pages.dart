@@ -7,4 +7,5 @@ class PageName {
   static const String signUp = '/signUpPage';
   static const String logIn = '/logInPage';
   static const String profile = '/profilePage';
+  static const String auth = '/authPage';
 }

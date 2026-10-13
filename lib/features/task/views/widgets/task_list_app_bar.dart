@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
-import 'package:tikdone_app/core/values/icons.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:tikdone_app/features/main/main_category/view_model/main_category_view_model.dart';
 import 'package:tikdone_app/features/task/view_model/task_view_model.dart';
 
@@ -25,7 +24,7 @@ class TaskListAppBar extends StatelessWidget {
               Get.back();
             },
             icon: Icon(
-              EvaIcons.arrow_left,
+              FluentIcons.arrow_left_24_regular,
               color: Colors.white,
             ),
           ),

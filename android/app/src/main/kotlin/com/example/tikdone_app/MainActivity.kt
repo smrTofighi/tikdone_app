@@ -1,4 +1,4 @@
-package com.example.todo_infinity_app
+package com.vornacode.tikdone
 
 import io.flutter.embedding.android.FlutterActivity
 

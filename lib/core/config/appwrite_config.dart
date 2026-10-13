@@ -1,7 +1,7 @@
 class AppwriteConfig {
   // Appwrite Config
   AppwriteConfig._();
-  static const String endpoint = "https://cloud.appwrite.io/v1";
+  static const String endpoint = "https://fra.cloud.appwrite.io/v1";
   static const String projectId = "669380e4002dde30bfda";
   static const String databaseId = "66938261001c7bbcc209";
   static const String userCollectionId = "66938269000979af2d4c";

@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:tikdone_app/core/styles/text_styles.dart';
 import 'package:tikdone_app/core/values/colors.dart';
 import 'package:tikdone_app/core/values/dimens.dart';
-import 'package:tikdone_app/core/values/icons.dart';
 import 'package:tikdone_app/features/profile/view_model/profile_view_model.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -32,7 +31,7 @@ class ProfilePage extends StatelessWidget {
             },
             color: Colors.black,
             icon: const Icon(
-              EvaIcons.arrow_left,
+              FluentIcons.arrow_left_24_regular,
               size: 22,
             ),
           ),

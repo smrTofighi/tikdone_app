@@ -8,7 +8,7 @@ final locator = GetIt.I;
 void setUpLocator() {
  
   locator.registerLazySingleton<InternetConnectionChecker>(
-    () => InternetConnectionChecker(),
+    () => InternetConnectionChecker.instance,
   );
  locator.registerLazySingleton<AppwriteProvider>(
     () => AppwriteProvider(),

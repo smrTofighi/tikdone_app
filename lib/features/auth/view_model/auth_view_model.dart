@@ -34,7 +34,7 @@ class AuthViewModel extends GetxController {
       //Get.put(MainCategoryViewModel());
       Get.offNamed(PageName.main);
     } else {
-      Get.offNamed(PageName.logIn);
+      Get.offNamed(PageName.auth);
     }
   }
 

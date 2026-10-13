@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tikdone_app/core/gen/fonts.gen.dart';
 import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/gen/fonts.gen.dart';
 
 class AppTextStyles {
   static TextStyle normal12(Color color) {

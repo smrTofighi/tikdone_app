@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:tikdone_app/features/search/search_task_widget.dart';
 import '../../../core/styles/text_styles.dart';
 import '../../../core/values/colors.dart';
 import '../../../core/values/dimens.dart';
-import '../../../core/values/icons.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});
@@ -25,7 +24,7 @@ class SearchView extends StatelessWidget {
           },
           color: Colors.black,
           icon: Icon(
-            EvaIcons.arrow_left,
+            FluentIcons.arrow_left_24_regular,
             size: 22,
           ),
         ),
@@ -42,7 +41,7 @@ class SearchView extends StatelessWidget {
                     icon: IconButton(
                       onPressed: () {},
                       icon: Icon(
-                        EvaIcons.search,
+                        FluentIcons.search_24_regular,
                       ),
                     ),
                   ),
