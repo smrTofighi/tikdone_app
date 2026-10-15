@@ -60,7 +60,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             BoxShadow(
                               color: isDark
                                   ? Colors.black26
-                                  : AppColors.primary.withOpacity(0.05),
+                                  : AppColors.primary.withValues(alpha: 0.05),
                               blurRadius: 32,
                               offset: const Offset(0, 12),
                             ),
@@ -191,10 +191,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                     borderSide: BorderSide.none),
                               ),
                               validator: (val) {
-                                if (val == null || val.trim().isEmpty)
+                                if (val == null || val.trim().isEmpty) {
                                   return PersianStrings.requiredText;
-                                if (!isEmail(val.trim()))
+                                }
+                                if (!isEmail(val.trim())) {
                                   return PersianStrings.emailFormatIsNotTrue;
+                                }
                                 return null;
                               },
                             ),
@@ -230,10 +232,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                     borderSide: BorderSide.none),
                               ),
                               validator: (val) {
-                                if (val == null || val.isEmpty)
+                                if (val == null || val.isEmpty) {
                                   return PersianStrings.requiredText;
-                                if (val.length < 6)
+                                }
+                                if (val.length < 6) {
                                   return 'حداقل ۶ کاراکتر وارد کنید';
+                                }
                                 return null;
                               },
                             ),

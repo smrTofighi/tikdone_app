@@ -1,12 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:tikdone_app/core/values/colors.dart';
-import 'package:tikdone_app/features/auth/view_model/auth_view_model.dart';
 import 'package:tikdone_app/features/auth/views/widgets/amient_glows.dart';
 import 'package:tikdone_app/features/auth/views/widgets/auth_card.dart';
 import 'package:tikdone_app/features/auth/views/widgets/auth_header.dart';
-import 'package:tikdone_app/gen/assets.gen.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});

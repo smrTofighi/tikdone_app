@@ -6,16 +6,14 @@ import 'package:tikdone_app/core/routes/pages.dart';
 import 'package:tikdone_app/core/utils/custom_snackbar.dart';
 import 'package:tikdone_app/data/models/category_model.dart';
 import 'package:tikdone_app/data/services/storage_service.dart';
-import 'package:tikdone_app/features/main/main_category/model/main_category_model.dart';
+import 'package:tikdone_app/features/category/repository/category_repository.dart';
 import 'package:tikdone_app/features/task/view_model/task_view_model.dart';
-import '../../../../core/utils/bottom_sheet_category.dart';
-import '../../../../core/values/strings.dart';
 
 class MainCategoryViewModel extends GetxController {
-  late MainCategoryModel _model;
-  MainCategoryModel get model => _model;
+  late CategoryRepository _model;
+  CategoryRepository get model => _model;
   MainCategoryViewModel() {
-    _model = MainCategoryModel();
+    _model = CategoryRepository();
   }
   final _storageService = locator<StorageService>();
 
@@ -28,6 +26,8 @@ class MainCategoryViewModel extends GetxController {
   RxBool isLoadingBottomSheet = RxBool(false);
   RxBool isLoading = RxBool(false);
   RxBool isError = RxBool(false);
+
+  
 
   @override
   void onInit() {
@@ -54,16 +54,18 @@ class MainCategoryViewModel extends GetxController {
 
   void addCategory(
       {required String title,
-      required String iconString,
+      required int iconString,
       required String themeString,
+      required bool pinToTop,
       required BuildContext context}) async {
     isLoadingBottomSheet(true);
     var userId = _storageService.getValue(StorageKey.userId);
     var res = await _model.addCategory(
       title: title,
-      theme: iconString,
-      icon: themeString,
+      theme: themeString,
+      icon: iconString,
       userId: userId,
+      pinToTop: pinToTop
     );
     res.fold(
       (failure) {
@@ -105,25 +107,7 @@ class MainCategoryViewModel extends GetxController {
     Get.toNamed(PageName.taskList);
   }
 
-  showBottomSheetCategory(context) {
-    bottomSheetCategory(
-      PersianStrings.newCategory,
-      _categoryController,
-      () {
-        Get.back();
-      },
-      () {
-        Get.back();
-      },
-      context,
-    );
-  }
-
-  //? Toast Message
-  toastMessage(String message, BuildContext context) {}
-
-  checkInputsForCategory(BuildContext context, String title) {}
-
+  
   void editCategory() {}
 
   void changeThemeCategory() {

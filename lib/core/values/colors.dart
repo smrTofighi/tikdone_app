@@ -47,9 +47,9 @@ class AppColors {
 }
 
 class ShadowColor {
-  static Color black = Colors.black.withOpacity(0.08);
+  static Color black = Colors.black.withValues(alpha: 0.08);
   static Color primary =
-      AppColors.primary.withOpacity(0.25); // سایه نرم همرنگ تم اصلی
+      AppColors.primary.withValues(alpha: 0.25); // سایه نرم همرنگ تم اصلی
 }
 
 // ==========================================
@@ -100,6 +100,6 @@ class ThemeHelper {
 
   // تبدیل شئ Color به رشته برای ذخیره در دیتابیس (برای ساخت رنگ کاستوم)
   static String colorToThemeString(Color color) {
-    return 'solid_#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+    return 'solid_#${color.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
   }
 }

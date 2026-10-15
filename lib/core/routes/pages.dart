@@ -8,4 +8,5 @@ class PageName {
   static const String logIn = '/logInPage';
   static const String profile = '/profilePage';
   static const String auth = '/authPage';
+  static const String createCategory = '/createCategoryPage';
 }

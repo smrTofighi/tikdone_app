@@ -53,7 +53,7 @@ class _SplashPageState extends State<SplashPage> {
                 height: 350,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.primary.withOpacity(0.35),
+                  color: AppColors.primary.withValues(alpha: 0.35),
                 ),
               ),
             ),
@@ -68,7 +68,7 @@ class _SplashPageState extends State<SplashPage> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.tertiary.withOpacity(0.25),
+                  color: AppColors.tertiary.withValues(alpha: 0.25),
                 ),
               ),
             ),
@@ -93,7 +93,7 @@ class _SplashPageState extends State<SplashPage> {
                       borderRadius: BorderRadius.circular(38),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withOpacity(0.25),
+                          color: AppColors.primary.withValues(alpha: 0.25),
                           blurRadius: 40,
                           offset: const Offset(0, 15),
                         ),

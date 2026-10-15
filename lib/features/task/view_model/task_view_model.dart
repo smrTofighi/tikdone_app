@@ -53,7 +53,7 @@ class TaskViewModel extends GetxController {
     );
   }
 
-  clearSingleTodoAfterAdd() {
+  void clearSingleTodoAfterAdd() {
     todoEditingController.clear();
     descEditingController.clear();
     isActiveNote(false);
@@ -76,7 +76,7 @@ class TaskViewModel extends GetxController {
     _model.description.value = todoModel.description ?? '';
   }
 
-  setCategory(CategoryModel category) {
+  void setCategory(CategoryModel category) {
     _model.categoryModel = category;
     log(_model.categoryModel.id);
     update();

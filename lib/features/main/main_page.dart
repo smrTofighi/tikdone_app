@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tikdone_app/core/routes/pages.dart';
 import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/features/category/views/categories_page.dart';
 
 // کنترلر ساده برای مدیریت تب‌های نوار پایین
 class MainController extends GetxController {
@@ -21,8 +23,7 @@ class MainPage extends StatelessWidget {
   final List<Widget> pages = [
     const Center(
         child: Text('صفحه خانه (داشبورد)', style: TextStyle(fontSize: 20))),
-    const Center(
-        child: Text('صفحه دسته‌بندی‌ها', style: TextStyle(fontSize: 20))),
+    CategoriesPage(),
     const Center(child: Text('صفحه آمار', style: TextStyle(fontSize: 20))),
     const Center(child: Text('صفحه تنظیمات', style: TextStyle(fontSize: 20))),
   ];
@@ -65,11 +66,11 @@ class GlassmorphicBottomNav extends StatelessWidget {
                 filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.cardLight.withOpacity(0.9),
+                    color: AppColors.cardLight.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(35),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.12),
+                        color: AppColors.primary.withValues(alpha: 0.12),
                         blurRadius: 32,
                         offset: const Offset(0, 8),
                       )
@@ -103,14 +104,7 @@ class GlassmorphicBottomNav extends StatelessWidget {
                 offset: const Offset(0, -20), // بالا کشیدن دکمه
                 child: GestureDetector(
                   onTap: () {
-                    // TODO: باز کردن فرم یا صفحه ایجاد تسک جدید
-                    Get.snackbar(
-                      'تسک جدید',
-                      'باز شدن فرم تسک جدید',
-                      snackPosition: SnackPosition.TOP,
-                      backgroundColor: AppColors.primary.withOpacity(0.9),
-                      colorText: Colors.white,
-                    );
+                   Get.toNamed(PageName.createCategory);
                   },
                   child: Container(
                     width: 56,
@@ -128,7 +122,7 @@ class GlassmorphicBottomNav extends StatelessWidget {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withOpacity(0.4),
+                          color: AppColors.primary.withValues(alpha: 0.4),
                           blurRadius: 24,
                           offset: const Offset(0, 10),
                         )

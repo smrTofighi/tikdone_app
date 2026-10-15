@@ -56,7 +56,7 @@ class TodoListWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isCompletedGroup
                       ? (isDark ? Colors.white10 : Colors.grey.shade200)
-                      : categoryColor.withOpacity(0.15),
+                      : categoryColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(

@@ -6,7 +6,7 @@ import 'package:tikdone_app/core/values/colors.dart'; // حاوی ThemeHelper
 import 'package:tikdone_app/core/values/dimens.dart';
 import 'package:tikdone_app/core/values/icons.dart'; // حاوی AppIcons
 import 'package:tikdone_app/core/values/strings.dart';
-import 'package:tikdone_app/features/main/main_category/view_model/main_category_view_model.dart';
+import 'package:tikdone_app/features/category/view-model/main_category_view_model.dart';
 import 'package:tikdone_app/features/task/view_model/task_view_model.dart';
 import 'package:tikdone_app/features/task/views/widgets/task_single_text_field.dart';
 import 'package:tikdone_app/features/task/views/widgets/todo_category.dart';
@@ -115,7 +115,7 @@ class _TaskSinglePageState extends State<TaskSinglePage> {
                     bgColor: currentColor,
                     isEmpty: taskVM.model.categoryModel.title.isEmpty.obs,
                     // ارسال آیکون جدید وکتوری به ویجت دسته بندی
-                    icon: AppIcons.getIcon(taskVM.model.categoryModel.icon),
+                    icon: AppIcons.getIconFromCode(taskVM.model.categoryModel.icon),
                     onTap: () {},
                   ),
                 ),
@@ -166,7 +166,7 @@ class AddEditTaskBottomNavigation extends StatelessWidget {
             backgroundColor: currentColor,
             foregroundColor: Colors.white,
             elevation: 8,
-            shadowColor: currentColor.withOpacity(0.4),
+            shadowColor: currentColor.withValues(alpha: 0.4),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),

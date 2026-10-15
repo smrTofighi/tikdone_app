@@ -31,10 +31,10 @@ class TaskSinglePageCategory extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppDimens.radius),
             color: isEmpty.value
                 ? (isDark ? Colors.white10 : Colors.grey.shade200)
-                : bgColor.withOpacity(0.18),
+                : bgColor.withValues(alpha: 0.18),
             border: Border.all(
               color:
-                  isEmpty.value ? Colors.transparent : bgColor.withOpacity(0.4),
+                  isEmpty.value ? Colors.transparent : bgColor.withValues(alpha: 0.4),
               width: 1.2,
             ),
           ),

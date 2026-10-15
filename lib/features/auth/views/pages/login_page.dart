@@ -56,7 +56,7 @@ class _LogInPageState extends State<LogInPage> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -105,7 +105,7 @@ class _LogInPageState extends State<LogInPage> {
                             BoxShadow(
                               color: isDark
                                   ? Colors.black26
-                                  : AppColors.primary.withOpacity(0.05),
+                                  : AppColors.primary.withValues(alpha: 0.05),
                               blurRadius: 32,
                               offset: const Offset(0, 12),
                             ),
@@ -134,10 +134,12 @@ class _LogInPageState extends State<LogInPage> {
                                 ),
                               ),
                               validator: (val) {
-                                if (val == null || val.trim().isEmpty)
+                                if (val == null || val.trim().isEmpty) {
                                   return PersianStrings.requiredText;
-                                if (!isEmail(val.trim()))
+                                }
+                                if (!isEmail(val.trim())) {
                                   return PersianStrings.emailFormatIsNotTrue;
+                                }
                                 return null;
                               },
                             ),
@@ -174,8 +176,9 @@ class _LogInPageState extends State<LogInPage> {
                                 ),
                               ),
                               validator: (val) {
-                                if (val == null || val.isEmpty)
+                                if (val == null || val.isEmpty) {
                                   return PersianStrings.requiredText;
+                                }
                                 return null;
                               },
                             ),

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:tikdone_app/binding.dart';
 import 'package:tikdone_app/core/routes/pages.dart';
 import 'package:tikdone_app/features/auth/views/pages/auth_page.dart';
+import 'package:tikdone_app/features/category/views/create_category_page.dart';
 import 'package:tikdone_app/features/main/main_page.dart';
 import 'package:tikdone_app/features/profile/views/pages/profile_page.dart';
 import 'package:tikdone_app/features/search/search_view.dart';
@@ -49,4 +50,8 @@ List<GetPage> routes = [
       name: PageName.profile,
       page: () => ProfilePage(),
       binding: ProfileBinding()),
+      GetPage(
+        name: PageName.createCategory,
+        page: () => CreateCategoryPage(),
+      )
 ];

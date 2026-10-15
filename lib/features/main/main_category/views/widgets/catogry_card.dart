@@ -20,7 +20,7 @@ class CategoryCard extends StatelessWidget {
 
   final String title;
   final int index;
-  final String icon;
+  final int icon;
   final String theme;
   final Function() onTap;
   final int totalTodos;
@@ -49,11 +49,11 @@ class CategoryCard extends StatelessWidget {
           color: isDark ? const Color(0xFF1E293B) : Colors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isDark ? Colors.white10 : Colors.black.withOpacity(0.04),
+            color: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.04),
           ),
           boxShadow: [
             BoxShadow(
-              color: isDark ? Colors.black26 : categoryColor.withOpacity(0.12),
+              color: isDark ? Colors.black26 : categoryColor.withValues(alpha: 0.12),
               blurRadius: 20,
               offset: const Offset(0, 8),
             )
@@ -70,14 +70,14 @@ class CategoryCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: categoryColor.withOpacity(0.15),
+                    color: categoryColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: Hero(
                     tag: 'tag_$title',
                     // ۲. استفاده از سیستم آیکون وکتوری جدید
                     child: Icon(
-                      AppIcons.getIcon(icon),
+                      AppIcons.getIconFromCode(icon),
                       color: categoryColor,
                       size: 28,
                     ),

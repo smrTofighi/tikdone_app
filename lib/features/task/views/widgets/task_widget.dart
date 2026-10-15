@@ -55,11 +55,11 @@ class TodoItemWidget extends StatelessWidget {
           border: Border.all(
             color: todo.completed
                 ? Colors.transparent
-                : (isDark ? Colors.white10 : Colors.black.withOpacity(0.04)),
+                : (isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.04)),
           ),
           boxShadow: [
             BoxShadow(
-              color: isDark ? Colors.black26 : Colors.black.withOpacity(0.03),
+              color: isDark ? Colors.black26 : Colors.black.withValues(alpha: 0.03),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),

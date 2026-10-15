@@ -10,7 +10,7 @@ ThemeData lightTheme() {
     primarySwatch: Colors.blue,
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.backGround,
-    shadowColor: Colors.black.withOpacity(0.1),
+    shadowColor: Colors.black.withValues(alpha: 0.1),
     splashColor: AppColors.primary,
     cardColor: AppColors.cardLight,
     appBarTheme: const AppBarTheme(

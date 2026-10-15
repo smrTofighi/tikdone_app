@@ -33,7 +33,7 @@ class TopSection extends StatelessWidget {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.12),
+                      color: Colors.black.withValues(alpha: 0.12),
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -43,7 +43,7 @@ class TopSection extends StatelessWidget {
                   tag: 'tag_${category.title}',
                   // استفاده از آیکون وکتوری جدید
                   child: Icon(
-                    AppIcons.getIcon(category.icon),
+                    AppIcons.getIconFromCode(category.icon),
                     color: categoryColor,
                     size: 30,
                   ),
@@ -76,7 +76,7 @@ class TopSection extends StatelessWidget {
                               ? 'همه کارها انجام شده 🎉'
                               : '$count مأموریت مانده',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.85),
+                            color: Colors.white.withValues(alpha: 0.85),
                             fontSize: 13,
                             fontFamily: FontFamily.samim,
                           ),

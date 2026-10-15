@@ -12,7 +12,7 @@ import 'package:tikdone_app/data/providers/appwrite_provider.dart';
 import 'package:tikdone_app/data/models/category_model.dart';
 import 'package:tikdone_app/data/services/storage_service.dart';
 
-class MainCategoryModel {
+class CategoryRepository {
   //? a list of categories
   final AppwriteProvider _appwriteProvider = locator<AppwriteProvider>();
   final InternetConnectionChecker _connectionChecker =
@@ -122,9 +122,11 @@ class MainCategoryModel {
   Future<Either<Failure, Document>> addCategory(
       {required String userId,
       required String title,
-      required String icon,
-      required String theme}) async {
+      required int icon,
+      required String theme,
+      required bool pinToTop}) async {
     try {
+
       if (await _connectionChecker.hasConnection) {
         String documentId = ID.unique();
         Document document = await _appwriteProvider.databases!.createDocument(
@@ -136,7 +138,8 @@ class MainCategoryModel {
             "title": title,
             "icon": icon,
             "theme": theme,
-            "id": documentId
+            "id": documentId,
+            "pinToTop": pinToTop
           },
         );
         categoryList.add(CategoryModel(
@@ -145,12 +148,13 @@ class MainCategoryModel {
             icon: icon,
             theme: theme,
             userId: userId));
-        log(document.toString());
+       
         return right(document);
       } else {
         return left(Failure('Check Internet Connection'));
       }
     } on AppwriteException catch (e) {
+      log(e.message!);
       return left(Failure(e.message!));
     } on ServerException catch (e) {
       return left(Failure(e.message));

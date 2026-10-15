@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:tikdone_app/features/main/main_category/view_model/main_category_view_model.dart';
+import 'package:tikdone_app/features/category/view-model/main_category_view_model.dart';
 import 'package:tikdone_app/features/task/view_model/task_view_model.dart';
 
 class TaskListAppBar extends StatelessWidget {

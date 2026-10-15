@@ -6,7 +6,7 @@ import 'package:tikdone_app/core/values/colors.dart';
 import 'package:tikdone_app/core/values/strings.dart';
 import 'package:tikdone_app/features/main/widgets/loading.dart';
 import 'package:tikdone_app/features/main/main_category/views/widgets/catogry_card.dart';
-import '../../view_model/main_category_view_model.dart';
+import '../../../../category/view-model/main_category_view_model.dart';
 
 // ignore: must_be_immutable
 class MainCategoryPage extends StatelessWidget {
@@ -160,7 +160,7 @@ void showDeleteCategoryDialog(
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.redAccent.withOpacity(0.12),
+              color: Colors.redAccent.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: const Icon(
