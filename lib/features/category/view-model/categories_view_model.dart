@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:tikdone_app/core/config/storage_key.dart';
 import 'package:tikdone_app/core/locator/locator.dart';
@@ -7,7 +9,7 @@ import 'package:tikdone_app/features/category/repository/category_repository.dar
 
 // یک مدل موقت برای رندر کردن UI (بعداً مدل اصلی دیتابیس را جایگزین این کنید)
 
-class CategoriesViewModel extends GetxController {
+class CategoriesViewModel extends GetxController with StateMixin<List<CategoryModel>> {
   late CategoryRepository _repository;
   CategoryRepository get model => _repository;
   CategoriesViewModel() {
@@ -17,7 +19,6 @@ class CategoriesViewModel extends GetxController {
   final _storageService = locator<StorageService>();
   final searchText = ''.obs;
   final activeFilter = 'all'.obs;
-  final isLoading = false.obs;
 
   // لیست واقعی متصل به دیتابیس
   final RxList<CategoryModel> allCategories = <CategoryModel>[].obs;
@@ -30,31 +31,37 @@ class CategoriesViewModel extends GetxController {
   }
 
   Future<void> fetchCategories() async {
-    isLoading.value = true;
+    change(null, status: RxStatus.loading());
 
     // گرفتن شناسه کاربر از استوریج
     final userId = _storageService.getValue(StorageKey.userId) ?? '';
 
     if (userId.isEmpty) {
-      isLoading.value = false;
-      return; // کاربر لاگین نیست
+      change(null, status: RxStatus.error('کاربر لاگین نیست'));
+      return;
     }
 
     final result = await _repository.getCategory(userId: userId);
 
     result.fold(
       (failure) {
-        // هندل کردن خطا (مثلا نمایش اسنک‌بار)
-        Get.snackbar('خطا در دریافت اطلاعات', failure.message);
+        log(failure.message);
+        change(null, status: RxStatus.error(failure.message));
       },
       (categories) {
-        // ریختن دیتای موفق داخل استیت
         allCategories.assignAll(categories);
+
+        if (categories.isEmpty) {
+          change(categories, status: RxStatus.empty());
+        } else {
+          change(categories, status: RxStatus.success());
+        }
       },
     );
 
-    isLoading.value = false;
   }
+
+
 
   // گرفتن لیست فیلتر و مرتب شده برای نمایش در کارت‌ها
   List<CategoryModel> get filteredCategories {
@@ -83,6 +90,13 @@ class CategoriesViewModel extends GetxController {
     });
 
     return list;
+  }
+
+  RxInt get totalActiveTasksCount {
+    return allCategories.fold(0, (sum, category)=> sum + category.activeTasks).obs;
+  }
+  RxInt get totalCategories {
+    return allCategories.length.obs;
   }
 
   void updateSearch(String query) => searchText.value = query;

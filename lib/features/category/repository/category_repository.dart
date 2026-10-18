@@ -56,66 +56,57 @@ class CategoryRepository {
     }
   }
 
-  Future<Either<Failure, List<CategoryModel>>> getCategory(
-      {required String userId}) async {
+  Future<Either<Failure, List<CategoryModel>>> getCategory({required String userId}) async {
     try {
       if (await _connectionChecker.hasConnection) {
-        DocumentList documentList = await _appwriteProvider.databases!
-            .listDocuments(
-                databaseId: AppwriteConfig.databaseId,
-                collectionId: AppwriteConfig.categoryCollectionId,
-                queries: [Query.equal("userId", userId)]);
-        Map<String, dynamic> data = documentList.toMap();
 
-        List list = data['documents'].toList();
+        // ۱. دریافت همه دسته‌بندی‌های کاربر (یک درخواست)
+        DocumentList categoryDocs = await _appwriteProvider.databases!.listDocuments(
+          databaseId: AppwriteConfig.databaseId,
+          collectionId: AppwriteConfig.categoryCollectionId,
+          queries: [Query.equal("userId", userId)],
+        );
 
-        categoryList =
-            list.map((e) => CategoryModel.fromJson(e['data'])).toList();
+        // تبدیل داکیومنت‌ها به مدل
+        List<CategoryModel> categories = categoryDocs.documents
+            .map((e) => CategoryModel.fromJson(e.data))
+            .toList();
+        categoryDocs.documents.map((e)=>{
+          log(e.data.toString())
+        });
 
-        for (final category in categoryList) {
-          final completedTodos =
-              await _appwriteProvider.databases!.listDocuments(
-            databaseId: AppwriteConfig.databaseId,
-            collectionId: AppwriteConfig.todoCollectionId,
-            queries: [
-              Query.equal('categoryId', category.id),
-              Query.equal(
-                'userId',
-                _storageService.getValue(
-                  StorageKey.userId,
-                ),
-              ),
-              Query.equal('isComplete', true),
-            ],
-          );
-          final totalTodos = await _appwriteProvider.databases!.listDocuments(
-            databaseId: AppwriteConfig.databaseId,
-            collectionId: AppwriteConfig.todoCollectionId,
-            queries: [
-              Query.equal('categoryId', category.id),
-              Query.equal(
-                'userId',
-                _storageService.getValue(
-                  StorageKey.userId,
-                ),
-              ), // فیلتر بر اساس userId
-            ],
-          );
-          final int total = totalTodos.total;
-          final int completed = completedTodos.total;
-          //final double percentage = total > 0 ? (completed / total) * 100 : 0;
-          category.totalTodos = total;
-          category.completedTodos = completed;
-        
+        // ۲. دریافت همه تسک‌های کاربر (فقط یک درخواست دوم)
+        // نکته: اگر اپلیکیشن بزرگ شد، می‌توانید Query.limit() را اضافه کنید
+        DocumentList todoDocs = await _appwriteProvider.databases!.listDocuments(
+          databaseId: AppwriteConfig.databaseId,
+          collectionId: AppwriteConfig.todoCollectionId,
+          queries: [Query.equal('userId', userId)],
+        );
+
+        // ۳. محاسبه و شمارش در داخل گوشی (بدون نیاز به اینترنت برای هر دسته)
+        for (var category in categories) {
+          // پیدا کردن تسک‌های مربوط به این دسته خاص
+          final categoryTodos = todoDocs.documents
+              .where((t) => t.data['categoryId'] == category.id)
+              .toList();
+
+          // شمردن کل تسک‌ها و تسک‌های تکمیل شده
+          category.totalTodos = categoryTodos.length;
+          category.completedTodos = categoryTodos
+              .where((t) => t.data['completed'] == true)
+              .length;
         }
-        return right(categoryList);
+
+        return right(categories);
       } else {
         return left(Failure('Check Internet Connection'));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(e.message ?? 'خطای سرور Appwrite'));
     } on ServerException catch (e) {
       return left(Failure(e.message));
+    } catch (e) {
+      return left(Failure('خطای نامشخص: ${e.toString()}'));
     }
   }
 

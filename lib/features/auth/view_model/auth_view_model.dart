@@ -32,9 +32,9 @@ class AuthViewModel extends GetxController {
         },
       );
       //Get.put(MainCategoryViewModel());
-      Get.offNamed(PageName.main);
+      Get.offNamed(AppPages.main);
     } else {
-      Get.offNamed(PageName.auth);
+      Get.offNamed(AppPages.auth);
     }
   }
 
@@ -61,7 +61,7 @@ class AuthViewModel extends GetxController {
       (user) {
         log(user.email);
         isLoading(false);
-        Get.offNamed(PageName.logIn);
+        Get.offNamed(AppPages.logIn);
         CustomSnackbar.showSuccess(context, 'Created: ${user.email}');
       },
     );
@@ -82,7 +82,7 @@ class AuthViewModel extends GetxController {
       },
       (session) {
         isLoading(false);
-        Get.offNamed(PageName.main);
+        Get.offNamed(AppPages.main);
         CustomSnackbar.showSuccess(context, session.userId);
         userSession = session;
       },

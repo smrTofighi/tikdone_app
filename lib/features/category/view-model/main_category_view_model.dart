@@ -104,14 +104,14 @@ class MainCategoryViewModel extends GetxController {
     final TaskViewModel taskVM = Get.put(TaskViewModel());
     taskVM.setCategory(category);
     taskVM.getTodos();
-    Get.toNamed(PageName.taskList);
+    Get.toNamed(AppPages.taskList);
   }
 
   
   void editCategory() {}
 
   void changeThemeCategory() {
-    Get.offAllNamed(PageName.main);
+    Get.offAllNamed(AppPages.main);
   }
 
   void changeDeleting(bool value) {

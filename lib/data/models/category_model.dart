@@ -42,7 +42,7 @@ class CategoryModel {
   bool get isCompleted => totalTodos > 0 && completedTodos == totalTodos;
 
   // وضعیت اولویت بالا (اگر در آینده فیلدی در دیتابیس زدید اینجا متصل کنید، فعلاً false)
-  bool get isHighPriority => false;
+  bool get isHighPriority => pinToTop;
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(

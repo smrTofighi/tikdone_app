@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
       locale: const Locale('fa', 'IR'),
       initialBinding: AuthBinding(),
       getPages: routes,
-      initialRoute: PageName.splash,
+      initialRoute: AppPages.splash,
+
     );
   }
 }

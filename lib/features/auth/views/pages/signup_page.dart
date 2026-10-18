@@ -303,7 +303,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   : Colors.grey.shade600),
                         ),
                         TextButton(
-                          onPressed: () => Get.offNamed(PageName.logIn),
+                          onPressed: () => Get.offNamed(AppPages.logIn),
                           child: Text(
                             PersianStrings.signin,
                             style: TextStyle(

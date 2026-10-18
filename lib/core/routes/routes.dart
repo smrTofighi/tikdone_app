@@ -2,56 +2,60 @@ import 'package:get/get.dart';
 import 'package:tikdone_app/binding.dart';
 import 'package:tikdone_app/core/routes/pages.dart';
 import 'package:tikdone_app/features/auth/views/pages/auth_page.dart';
-import 'package:tikdone_app/features/category/views/create_category_page.dart';
-import 'package:tikdone_app/features/main/main_page.dart';
+import 'package:tikdone_app/features/category/views/pages/create_category_page.dart';
+import 'package:tikdone_app/features/main/views/main_page.dart';
 import 'package:tikdone_app/features/profile/views/pages/profile_page.dart';
 import 'package:tikdone_app/features/search/search_view.dart';
 import 'package:tikdone_app/features/splash/splash_page.dart';
-import 'package:tikdone_app/features/task/views/pages/task_single_page.dart';
-import 'package:tikdone_app/features/task/views/pages/task_list_page.dart';
 import 'package:tikdone_app/features/auth/views/pages/login_page.dart';
 import 'package:tikdone_app/features/auth/views/pages/signup_page.dart';
 
+import '../../features/category/views/pages/category_workspace_page.dart';
+import '../../features/task/views/create_task_page.dart';
+
 List<GetPage> routes = [
   GetPage(
-    name: PageName.signUp,
+    name: AppPages.signUp,
     page: () => const SignUpPage(),
   ),
   GetPage(
-    name: PageName.logIn,
+    name: AppPages.logIn,
     page: () => const LogInPage(),
   ),
   GetPage(
-    name: PageName.splash,
+    name: AppPages.splash,
     page: () => const SplashPage(),
   ),
   GetPage(
-    name: PageName.auth,
+    name: AppPages.auth,
     page: () => AuthPage(),
   ),
   GetPage(
-    name: PageName.main,
+    name: AppPages.main,
     page: () => MainPage(),
-    bindings: [CategoryBinding(), TaskBinding(), ReportBinding()],
+    bindings: [MainBinding()],
   ),
   GetPage(
-      name: PageName.taskList,
-      page: () => TaskListPage(),
-      binding: TaskBinding()),
-  GetPage(
-    name: PageName.taskSingle,
-    page: () => TaskSinglePage(),
+    name: AppPages.categoryWorkspace,
+    page: () => CategoryWorkspacePage(),
+    binding: CategoryBinding()
+
   ),
   GetPage(
-    name: PageName.search,
+    name: AppPages.createTask,
+    page: () => CreateTaskPage(),
+    binding: TaskBinding(),
+  ),
+  GetPage(
+    name: AppPages.search,
     page: () => const SearchView(),
   ),
   GetPage(
-      name: PageName.profile,
+      name: AppPages.profile,
       page: () => ProfilePage(),
       binding: ProfileBinding()),
       GetPage(
-        name: PageName.createCategory,
+        name: AppPages.createCategory,
         page: () => CreateCategoryPage(),
       )
 ];
