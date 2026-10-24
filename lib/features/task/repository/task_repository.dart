@@ -15,7 +15,7 @@ import 'package:tikdone_app/data/models/todo_model.dart';
 import 'package:tikdone_app/data/providers/appwrite_provider.dart';
 import 'package:tikdone_app/data/services/storage_service.dart';
 
-class TaskModel {
+class TaskRepository {
   late CategoryModel categoryModel;
 
   final _appwrite = locator<AppwriteProvider>();
