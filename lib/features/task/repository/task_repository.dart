@@ -21,114 +21,36 @@ class TaskRepository {
   final _appwrite = locator<AppwriteProvider>();
   final _connectionChecker = locator<InternetConnectionChecker>();
   final _storageService = locator<StorageService>();
-  final RxString alarm = RxString('');
-  final RxString description = RxString('');
 
-  Future<Either<Failure, dynamic>> deleteTodo(
-      {required String id, required bool isCompleted}) async {
-    try {
-      if (await _connectionChecker.hasConnection) {
-        var document = await _appwrite.databases!.deleteDocument(
-          databaseId: AppwriteConfig.databaseId,
-          collectionId: AppwriteConfig.todoCollectionId,
-          documentId: id,
-        );
-
-        if (isCompleted == false) {
-          categoryModel.activeTodos!.removeWhere((element) => element.id == id);
-        } else {
-          categoryModel.unActiveTodos!
-              .removeWhere((element) => element.id == id);
-          categoryModel.completedTodos = categoryModel.completedTodos - 1;
-        }
-        categoryModel.totalTodos = categoryModel.totalTodos - 1;
-
-        return right(document);
-      } else {
-        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
-      }
-    } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
-    } on ServerException catch (e) {
-      return left(Failure(e.message));
-    }
-  }
-
-  Future<Either<Failure, Document>> addTodo({
+  Future<Either<Failure, Document>> createTask({
     required String title,
-    required bool completed,
+    required String description,
+    required String categoryId,
+    required int priority,
+    DateTime? dueDate,
+    DateTime? remindAt,
   }) async {
     try {
       if (await _connectionChecker.hasConnection) {
         String documentId = ID.unique();
+
         Document document = await _appwrite.databases!.createDocument(
           databaseId: AppwriteConfig.databaseId,
           collectionId: AppwriteConfig.todoCollectionId,
           documentId: documentId,
           data: {
             "userId": _storageService.getValue(StorageKey.userId),
-            "title": title,
-            "description": description.value,
-            "completed": completed, // اصلاح فیلد دیتابیس
-            "important": false, // فیلد جدید اضافه شد
-            'categoryId': categoryModel.id,
+            "categoryId": categoryId,
             "id": documentId,
-          },
-        );
-
-        categoryModel.activeTodos!.add(
-          TodoModel(
-            id: documentId,
-            title: title,
-            description: description.value,
-            categoryId: categoryModel.id,
-            userId: _storageService.getValue(StorageKey.userId),
-            completed: completed, // استفاده از نام جدید متغیر در مدل
-            important: false,
-          ),
-        );
-        categoryModel.totalTodos = categoryModel.totalTodos + 1;
-
-        return right(document);
-      } else {
-        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
-      }
-    } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
-    } on ServerException catch (e) {
-      return left(Failure(e.message));
-    }
-  }
-
-  Future<Either<Failure, Document>> updateTodo({
-    required String documentId,
-    required String title,
-    required bool isCompleted,
-    required int index,
-  }) async {
-    try {
-      if (await _connectionChecker.hasConnection) {
-        Document document = await _appwrite.databases!.updateDocument(
-          databaseId: AppwriteConfig.databaseId,
-          collectionId: AppwriteConfig.todoCollectionId,
-          documentId: documentId,
-          data: {
             "title": title,
-            "completed": isCompleted, // اصلاح فیلد دیتابیس
-            "description": description.value
+            "description": description,
+            "completed": false, // تسک جدید همیشه ناتمام است
+            "priority": priority, // فیلد جدید
+            "dueDate": dueDate?.toIso8601String(),
+            "remindAt": remindAt?.toIso8601String(),
           },
         );
 
-        if (isCompleted == false) {
-          categoryModel.activeTodos![index]
-            ..title = title
-            ..description = description.value;
-        } else {
-          categoryModel.unActiveTodos![index]
-            ..title = title
-            ..description = description.value;
-        }
-        log(document.data.toString());
         return right(document);
       } else {
         return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
@@ -140,100 +62,38 @@ class TaskRepository {
     }
   }
 
-  Future<Either<Failure, List<TodoModel>>> getTodoList() async {
+  Future<Either<Failure, List<TodoModel>>> getTasksByCategory(
+      String categoryId) async {
     try {
       if (await _connectionChecker.hasConnection) {
-        DocumentList responseActiveTodo =
-            await _appwrite.databases!.listDocuments(
+        // دریافت داکیومنت‌ها از سرور بر اساس categoryId
+        final response = await _appwrite.databases!.listDocuments(
           databaseId: AppwriteConfig.databaseId,
           collectionId: AppwriteConfig.todoCollectionId,
           queries: [
-            Query.equal(
-              'userId',
-              _storageService.getValue(StorageKey.userId),
-            ),
-            Query.equal('categoryId', categoryModel.id),
-            Query.equal('completed', false) // اصلاح فیلد در کوئری
+            Query.equal('categoryId', categoryId),
+            Query.equal('userId', _storageService.box.read(StorageKey.userId)),
+            // اختیاری: برای اینکه تسک‌های جدیدتر بالاتر نشان داده شوند
+            Query.orderDesc('\$createdAt'),
           ],
         );
 
-        DocumentList responseUnActiveTodo =
-            await _appwrite.databases!.listDocuments(
-          databaseId: AppwriteConfig.databaseId,
-          collectionId: AppwriteConfig.todoCollectionId,
-          queries: [
-            Query.equal(
-              'userId',
-              _storageService.getValue(StorageKey.userId),
-            ),
-            Query.equal('categoryId', categoryModel.id),
-            Query.equal('completed', true) // اصلاح فیلد در کوئری
-          ],
-        );
-
-        log(responseActiveTodo.documents.toString());
-
-        // استفاده از fromJson مطابق با آپدیت مدل جدید
-        categoryModel.unActiveTodos = responseUnActiveTodo.documents
+        // تبدیل دیتای خام (JSON) سرور به لیست مدل‌های دارت
+        final List<TodoModel> tasks = response.documents
             .map((doc) => TodoModel.fromJson(doc.data))
-            .toList()
-            .obs;
+            .toList();
 
-        categoryModel.activeTodos = responseActiveTodo.documents
-            .map((doc) => TodoModel.fromJson(doc.data))
-            .toList()
-            .obs;
-
-        return right(categoryModel.activeTodos! as List<TodoModel>);
+        return right(tasks);
       } else {
-        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
+        return left(Failure('لطفاً اتصال اینترنت خود را بررسی کنید'));
       }
     } on AppwriteException catch (e) {
       return left(Failure(e.message!));
     } on ServerException catch (e) {
       return left(Failure(e.message));
-    }
-  }
-
-  Future<Either<Failure, Document>> updateIsCompleted({
-    required String id,
-    required bool isComplete, // مقدار جدید تیک (true یا false)
-  }) async {
-    try {
-      final document = await _appwrite.databases!.updateDocument(
-        collectionId: AppwriteConfig.todoCollectionId,
-        databaseId: AppwriteConfig.databaseId,
-        documentId: id,
-        data: {
-          'completed': isComplete, // اصلاح فیلد دیتابیس
-        },
-      );
-
-      // منطق تمیز و اصلاح‌شده برای جابجایی تسک بین لیست فعال و انجام‌شده
-      if (isComplete) {
-        // تسک انجام شد: انتقال از فعال به غیرفعال
-        var todo = categoryModel.activeTodos!
-            .firstWhere((element) => element.id == id);
-        todo.completed = true;
-        categoryModel.activeTodos!.remove(todo);
-        categoryModel.unActiveTodos!.add(todo);
-        categoryModel.completedTodos = categoryModel.completedTodos +
-            1; // اضافه کردن به تعداد انجام شده‌ها
-      } else {
-        // تیک تسک برداشته شد: انتقال از غیرفعال به فعال
-        var todo = categoryModel.unActiveTodos!
-            .firstWhere((element) => element.id == id);
-        todo.completed = false;
-        categoryModel.unActiveTodos!.remove(todo);
-        categoryModel.activeTodos!.add(todo);
-        categoryModel.completedTodos =
-            categoryModel.completedTodos - 1; // کسر از تعداد انجام شده‌ها
-      }
-
-      log(document.data.toString());
-      return right(document);
     } catch (e) {
-      return Left(Failure(e.toString()));
+      return left(Failure('خطای نامشخص: ${e.toString()}'));
     }
   }
+
 }

@@ -11,7 +11,7 @@ import 'package:tikdone_app/features/auth/views/pages/login_page.dart';
 import 'package:tikdone_app/features/auth/views/pages/signup_page.dart';
 
 import '../../features/category/views/pages/category_workspace_page.dart';
-import '../../features/task/views/create_task_page.dart';
+import '../../features/task/views/pages/create_task_page.dart';
 
 List<GetPage> routes = [
   GetPage(

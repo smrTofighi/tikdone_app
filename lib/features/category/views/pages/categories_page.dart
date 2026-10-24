@@ -10,7 +10,7 @@ import 'package:tikdone_app/features/main/widgets/loading.dart';
 
 import '../widgets/categories/category_state_empty.dart';
 import '../widgets/categories/summary_ribbon.dart';
-import 'filter_pills.dart';
+import '../widgets/categories/filter_pills.dart';
 
 class CategoriesPage extends GetView<CategoriesViewModel> {
   const CategoriesPage({super.key});

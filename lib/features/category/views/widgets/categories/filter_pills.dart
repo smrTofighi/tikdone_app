@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/values/colors.dart';
-import '../../view-model/categories_view_model.dart';
+import '../../../../../core/values/colors.dart';
+import '../../../view-model/categories_view_model.dart';
 
 class FilterPills extends GetView<CategoriesViewModel> {
   FilterPills({super.key});

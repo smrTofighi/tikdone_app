@@ -5,7 +5,7 @@ class TodoModel {
   String title;
   String? description;
   bool completed;
-  bool important; // جدید: تسک‌های ستاره‌دار
+  int priority;
   DateTime? dueDate; // جدید: تاریخ سررسید
   DateTime? remindAt; // جدید: ساعت یادآوری
 
@@ -16,7 +16,7 @@ class TodoModel {
     required this.title,
     this.description,
     required this.completed,
-    this.important = false,
+    this.priority = 0,
     this.dueDate,
     this.remindAt,
   });
@@ -29,7 +29,7 @@ class TodoModel {
       title: json['title'] ?? '',
       description: json['description'],
       completed: json['completed'] ?? false,
-      important: json['important'] ?? false,
+      priority: json['priority'] ?? 0,
       dueDate: json['dueDate'] != null ? DateTime.parse(json['dueDate']) : null,
       remindAt:
           json['remindAt'] != null ? DateTime.parse(json['remindAt']) : null,
@@ -44,7 +44,7 @@ class TodoModel {
       'title': title,
       'description': description,
       'completed': completed,
-      'important': important,
+      'priority': priority,
       'dueDate': dueDate?.toIso8601String(),
       'remindAt': remindAt?.toIso8601String(),
     };

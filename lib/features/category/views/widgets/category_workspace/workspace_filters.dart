@@ -6,7 +6,7 @@ import '../../../../../core/values/colors.dart';
 
 class WorkspaceFilters extends GetView<CategoryWorkspaceViewModel> {
   WorkspaceFilters({super.key});
-  final filters = ['همه', 'در حال انجام', 'در انتظار', 'تکمیل شده'];
+  final filters = ['همه', 'در انتظار', 'تکمیل شده'];
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +20,19 @@ class WorkspaceFilters extends GetView<CategoryWorkspaceViewModel> {
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final isSelected = index == 0; // متصل به Obx می‌شود
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: isSelected ? color : AppColors.cardLight,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              filters[index],
-              style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: isSelected ? Colors.white : AppColors.textMutedLight),
+          return GestureDetector(
+            
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected ? color : AppColors.cardLight,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                filters[index],
+                style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: isSelected ? Colors.white : AppColors.textMutedLight),
+              ),
             ),
           );
         },

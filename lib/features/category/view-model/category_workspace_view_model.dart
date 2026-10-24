@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tikdone_app/features/task/repository/task_repository.dart';
 
 import '../../../data/models/category_model.dart';
+import '../../../data/models/todo_model.dart';
 // import 'package:tikdone_app/data/models/todo_model.dart'; // مدل تسک‌های شما
 
-class CategoryWorkspaceViewModel extends GetxController with StateMixin<List<dynamic>> {
-  // گرفتن اطلاعات دسته‌بندی از صفحه‌ی لیست دسته‌ها
+class CategoryWorkspaceViewModel extends GetxController with StateMixin<List<TodoModel>> {
+  late TaskRepository _taskRepository;
+  TaskRepository get taskRepository => _taskRepository;
+  CategoryWorkspaceViewModel() {
+    _taskRepository = TaskRepository();
+  }
+  // استخراج تسک‌ها بر اساس فیلتر انتخاب شده
+  final RxList<TodoModel> allTasks = <TodoModel>[].obs;
+
+  List<TodoModel> get filteredTasks {
+    if (activeFilter.value == 'in_progress') {
+      // فقط تسک‌های ناتمام
+      return allTasks.where((task) => !task.completed).toList();
+    } else if (activeFilter.value == 'completed') {
+      // فقط تسک‌های تمام‌شده
+      return allTasks.where((task) => task.completed).toList();
+    }
+    // در غیر این صورت (حالت all)، همه را برگردان
+    return allTasks;
+  }
   late Rx<CategoryModel> category;
 
   final taskController = TextEditingController();
@@ -21,19 +41,31 @@ class CategoryWorkspaceViewModel extends GetxController with StateMixin<List<dyn
     fetchCategoryTasks();
   }
 
-  void fetchCategoryTasks() {
+
+
+  void fetchCategoryTasks() async {
     change(null, status: RxStatus.loading());
 
-    // TODO: اینجا باید ریکوئست به دیتابیس بزنید تا تسک‌های مربوط به category.value.id را بگیرید
-    // فعلاً برای تست UI یک لیست خالیِ موفق (یا چند دیتای تستی) برمی‌گردانیم
-    Future.delayed(const Duration(milliseconds: 500), () {
-      final mockTasks = [
-        {'id': '1', 'title': 'طراحی پیش‌نمایش اتاق کار', 'completed': false},
-        {'id': '2', 'title': 'ارسال گزارش مالی', 'completed': true},
-      ];
-      change(mockTasks, status: RxStatus.success());
-    });
+    // درخواست به سرور با آیدی همین دسته‌بندی
+    final result = await _taskRepository.getTasksByCategory(category.value.id);
+    result.fold(
+          (failure) {
+        change(null, status: RxStatus.error(failure.message));
+      },
+          (tasks) {
+        // ذخیره در لیست لوکال
+        allTasks.assignAll(tasks);
+
+        // مدیریت وضعیت UI بر اساس خالی بودن یا پر بودن لیست
+        if (tasks.isEmpty) {
+          change(tasks, status: RxStatus.empty());
+        } else {
+          change(tasks, status: RxStatus.success());
+        }
+      },
+    );
   }
+
 
   void quickAddTask() {
     final title = taskController.text.trim();

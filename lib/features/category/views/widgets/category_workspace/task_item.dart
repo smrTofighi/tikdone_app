@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tikdone_app/data/models/todo_model.dart';
 import 'package:tikdone_app/features/category/view-model/category_workspace_view_model.dart';
 
 import '../../../../../core/values/colors.dart';
 
 class TaskItem extends GetView<CategoryWorkspaceViewModel> {
   const TaskItem({super.key, required this.task});
-  final Map<String, dynamic> task;
+  final TodoModel task;
   @override
   Widget build(BuildContext context) {
-    final completed = task['completed'] == true;
+    final completed = task.completed == true;
     final color = ThemeHelper.parsePrimaryColor(controller.category.value.theme);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -35,7 +36,7 @@ class TaskItem extends GetView<CategoryWorkspaceViewModel> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              task['title'],
+              task.title,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: completed ? FontWeight.normal : FontWeight.bold,
