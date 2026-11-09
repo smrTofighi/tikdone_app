@@ -46,7 +46,7 @@ class CreateCategoryPage extends StatelessWidget {
                         const SizedBox(height: 24),
                         const TogglesSection(),
                         const SizedBox(height: 32),
-                        _buildActionButtons(context),
+                        CreateCategoryAction(),
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -59,13 +59,18 @@ class CreateCategoryPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildActionButtons(BuildContext context) {
+class CreateCategoryAction extends GetView<CreateCategoryViewModel> {
+  const CreateCategoryAction({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Obx(() {
           final color =
-              ThemeHelper.parsePrimaryColor(createVM.selectedTheme.value);
+              ThemeHelper.parsePrimaryColor(controller.selectedTheme.value);
           return AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             height: 56,
@@ -84,20 +89,22 @@ class CreateCategoryPage extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
-                onTap: createVM.isLoading.value
+                onTap: controller.isLoading.value
                     ? null
                     : () {
-                        createVM.createCategory(context);
+                       controller.saveCategory(context);
                       },
-                child: createVM.isLoading.value
+                child: controller.isLoading.value
                     ? SizedBox(
                         width: double.infinity,
                         child: Center(child: Loading(color: Colors.white)))
-                    : const Row(
+                    : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'ایجاد و ذخیره دسته‌بندی',
+                            controller.isEditing
+                                ? 'ذخیره تغییرات'
+                                : 'ایجاد دسته‌بندی جدید',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -115,10 +122,6 @@ class CreateCategoryPage extends StatelessWidget {
     );
   }
 }
-
-// ==========================================
-// کامپوننت‌های مستقل
-// ==========================================
 
 class TitleInputSection extends StatelessWidget {
   const TitleInputSection({super.key});
@@ -175,7 +178,6 @@ class TitleInputSection extends StatelessWidget {
 
 class IconSelectorSection extends StatelessWidget {
   const IconSelectorSection({super.key});
-
 
   @override
   Widget build(BuildContext context) {

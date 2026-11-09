@@ -43,16 +43,20 @@ class CreateTaskButtonActions extends GetView<CreateTaskViewModel> {
                       color: Colors.white, strokeWidth: 3))
                   : GestureDetector(
                 onTap: () => controller.saveTask(),
-                child: const Row(
+                child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                     Icon(Icons.task_alt_rounded, color: Colors.white),
                     SizedBox(width: 8),
-                    Text('ثبت و ذخیره تسک',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
+                   // فقط بخش Text داخل GestureDetector را اینطور تغییر بده:
+                              Text(
+                                  controller.isEditing
+                                      ? 'ذخیره تغییرات'
+                                      : 'ثبت و ذخیره تسک',
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white))
                                     ],
                                   ),
                   ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tikdone_app/core/values/colors.dart';
+import 'package:tikdone_app/features/category/view-model/create_category_view_model.dart';
 
-class CreateCategoryHeader extends StatelessWidget {
+class CreateCategoryHeader extends GetView<CreateCategoryViewModel> {
   const CreateCategoryHeader({super.key});
 
   @override
@@ -17,8 +18,8 @@ class CreateCategoryHeader extends StatelessWidget {
                 color: AppColors.textMutedLight),
             onPressed: () => Get.back(),
           ),
-          const Text(
-            'ساخت دسته‌بندی جدید',
+           Text(
+            controller.isEditing ? 'ویرایش دسته‌بندی' : 'ساخت دسته‌بندی',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,

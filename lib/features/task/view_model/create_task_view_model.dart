@@ -10,25 +10,65 @@ import '../../category/view-model/category_workspace_view_model.dart';
 class CreateTaskViewModel extends GetxController {
   late TaskRepository _taskRepository;
   TaskRepository get taskRepository => _taskRepository;
-  CreateTaskViewModel(){
+
+  CreateTaskViewModel() {
     _taskRepository = TaskRepository();
   }
+
   final titleController = TextEditingController();
   final descController = TextEditingController();
 
   final RxString selectedCategoryId = ''.obs;
   final Rx<DateTime?> dueDate = Rx<DateTime?>(null);
-
   final RxBool pickDateEnabled = false.obs;
-
   final RxBool reminderEnabled = false.obs;
-  final RxString reminderPreset = 'on_time'.obs; // on_time, 10m, 30m, 1h
-
+  final RxString reminderPreset = 'on_time'.obs;
   final RxInt priorityLevel = 0.obs;
-
   final RxBool isLoading = false.obs;
-
   final RxList<CategoryModel> availableCategories = <CategoryModel>[].obs;
+
+  // متغیرهای حالت ویرایش
+  bool isEditing = false;
+  TodoModel? existingTask;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    // تشخیص حالت ویرایش و پر کردن تمام فیلدها
+    if (Get.arguments != null && Get.arguments is TodoModel) {
+      isEditing = true;
+      existingTask = Get.arguments;
+
+      titleController.text = existingTask!.title;
+      descController.text = existingTask!.description ?? '';
+      priorityLevel.value = existingTask!.priority;
+
+      // پر کردن فیلدهای تاریخ و تقویم
+      if (existingTask!.dueDate != null) {
+        pickDateEnabled.value = true;
+        dueDate.value = existingTask!.dueDate;
+      }
+
+      // پر کردن فیلدهای یادآور
+      if (existingTask!.remindAt != null) {
+        reminderEnabled.value = true;
+        // محاسبه اختلاف بین dueDate و remindAt برای تنظیم preset
+        if (existingTask!.dueDate != null) {
+          final diff = existingTask!.dueDate!
+              .difference(existingTask!.remindAt!)
+              .inMinutes;
+          if (diff == 0) {
+            reminderPreset.value = 'on_time';
+          } else if (diff == 10) {
+            reminderPreset.value = '10m';
+          } else if (diff == 30) {
+            reminderPreset.value = '30m';
+          }
+        }
+      }
+    }
+  }
 
 
   void selectCategory(String id) => selectedCategoryId.value = id;
@@ -130,7 +170,6 @@ class CreateTaskViewModel extends GetxController {
 
     isLoading.value = true;
 
-    // ۱. محاسبه زمان یادآور (بر اساس تاریخ سررسید و گزینه انتخاب شده)
     DateTime? finalRemindAt;
     if (reminderEnabled.value && dueDate.value != null) {
       if (reminderPreset.value == '10m') {
@@ -138,36 +177,58 @@ class CreateTaskViewModel extends GetxController {
       } else if (reminderPreset.value == '30m') {
         finalRemindAt = dueDate.value!.subtract(const Duration(minutes: 30));
       } else {
-        finalRemindAt = dueDate.value; // on_time
+        finalRemindAt = dueDate.value;
       }
     }
 
-    // ۲. ارسال درخواست به ریپازیتوری
-    final result = await _taskRepository.createTask(
-      title: title,
-      description: descController.text.trim(),
-      categoryId: Get.find<CategoryWorkspaceViewModel>().category.value.id,
-      priority: priorityLevel.value, // از 1 تا 3
-      dueDate: dueDate.value,
-      remindAt: finalRemindAt,
-    );
+    if (isEditing) {
+      final result = await _taskRepository.updateTask(
+        id: existingTask!.id,
+        title: title,
+        description: descController.text.trim(),
+        priority: priorityLevel.value,
+        dueDate: dueDate.value,
+        remindAt: finalRemindAt,
+      );
 
-    result.fold(
-          (failure) {
-        Get.snackbar('خطا', failure.message);
-      },
-          (document) {
-        // ۳. آپدیت موفقیت‌آمیز و بازگشت به صفحه قبل (آپدیت لوکال)
-        final newTodo = TodoModel.fromJson(document.data);
+      result.fold(
+        (failure) => Get.snackbar('خطا', failure.message),
+        (document) {
+          final updatedTodo = TodoModel.fromJson(document.data);
+          // کپی کردن وضعیت قبلی چک‌باکس چون در متد ویرایش تغییر نمی‌کند
+          updatedTodo.completed = existingTask!.completed;
 
-        // اضافه کردن مستقیم به لیستِ فضای کاری برای نمایش زنده بدون رفرش
-        //Get.find<CategoryWorkspaceViewModel>().addTodoLocal(newTodo);
+          if (Get.isRegistered<CategoryWorkspaceViewModel>()) {
+            Get.find<CategoryWorkspaceViewModel>().updateTodoLocal(updatedTodo);
+          }
+          Get.back();
+          Get.snackbar('موفق', 'تسک با موفقیت ویرایش شد',
+              backgroundColor: Colors.green, colorText: Colors.white);
+        },
+      );
+    } else {
+      final result = await _taskRepository.createTask(
+        title: title,
+        description: descController.text.trim(),
+        categoryId: Get.find<CategoryWorkspaceViewModel>().category.value.id,
+        priority: priorityLevel.value,
+        dueDate: dueDate.value,
+        remindAt: finalRemindAt,
+      );
 
-        Get.back();
-        Get.snackbar('موفق', 'تسک با موفقیت ذخیره شد');
-      },
-    );
-
+      result.fold(
+        (failure) => Get.snackbar('خطا', failure.message),
+        (document) {
+          final newTodo = TodoModel.fromJson(document.data);
+          if (Get.isRegistered<CategoryWorkspaceViewModel>()) {
+            Get.find<CategoryWorkspaceViewModel>().addTodoLocal(newTodo);
+          }
+          Get.back();
+          Get.snackbar('موفق', 'تسک با موفقیت ذخیره شد',
+              backgroundColor: Colors.green, colorText: Colors.white);
+        },
+      );
+    }
     isLoading.value = false;
   }
 

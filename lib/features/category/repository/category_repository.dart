@@ -4,7 +4,6 @@ import 'package:appwrite/models.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:tikdone_app/core/config/appwrite_config.dart';
-import 'package:tikdone_app/core/config/storage_key.dart';
 import 'package:tikdone_app/core/errors/failure.dart';
 import 'package:tikdone_app/core/errors/server_exception.dart';
 import 'package:tikdone_app/core/locator/locator.dart';
@@ -56,12 +55,13 @@ class CategoryRepository {
     }
   }
 
-  Future<Either<Failure, List<CategoryModel>>> getCategory({required String userId}) async {
+  Future<Either<Failure, List<CategoryModel>>> getCategory(
+      {required String userId}) async {
     try {
       if (await _connectionChecker.hasConnection) {
-
         // ۱. دریافت همه دسته‌بندی‌های کاربر (یک درخواست)
-        DocumentList categoryDocs = await _appwriteProvider.databases!.listDocuments(
+        DocumentList categoryDocs =
+            await _appwriteProvider.databases!.listDocuments(
           databaseId: AppwriteConfig.databaseId,
           collectionId: AppwriteConfig.categoryCollectionId,
           queries: [Query.equal("userId", userId)],
@@ -71,13 +71,12 @@ class CategoryRepository {
         List<CategoryModel> categories = categoryDocs.documents
             .map((e) => CategoryModel.fromJson(e.data))
             .toList();
-        categoryDocs.documents.map((e)=>{
-          log(e.data.toString())
-        });
+        categoryDocs.documents.map((e) => {log(e.data.toString())});
 
         // ۲. دریافت همه تسک‌های کاربر (فقط یک درخواست دوم)
         // نکته: اگر اپلیکیشن بزرگ شد، می‌توانید Query.limit() را اضافه کنید
-        DocumentList todoDocs = await _appwriteProvider.databases!.listDocuments(
+        DocumentList todoDocs =
+            await _appwriteProvider.databases!.listDocuments(
           databaseId: AppwriteConfig.databaseId,
           collectionId: AppwriteConfig.todoCollectionId,
           queries: [Query.equal('userId', userId)],
@@ -92,9 +91,8 @@ class CategoryRepository {
 
           // شمردن کل تسک‌ها و تسک‌های تکمیل شده
           category.totalTodos = categoryTodos.length;
-          category.completedTodos = categoryTodos
-              .where((t) => t.data['completed'] == true)
-              .length;
+          category.completedTodos =
+              categoryTodos.where((t) => t.data['completed'] == true).length;
         }
 
         return right(categories);
@@ -117,7 +115,6 @@ class CategoryRepository {
       required String theme,
       required bool pinToTop}) async {
     try {
-
       if (await _connectionChecker.hasConnection) {
         String documentId = ID.unique();
         Document document = await _appwriteProvider.databases!.createDocument(
@@ -139,13 +136,66 @@ class CategoryRepository {
             icon: icon,
             theme: theme,
             userId: userId));
-       
+
         return right(document);
       } else {
         return left(Failure('Check Internet Connection'));
       }
     } on AppwriteException catch (e) {
       log(e.message!);
+      return left(Failure(e.message!));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  Future<Either<Failure, Document>> updateCategory(
+      {required String categoryId,
+      required String title,
+      required int icon,
+      required String theme,
+      required bool pinToTop}) async {
+    try {
+      if (await _connectionChecker.hasConnection) {
+        Document document = await _appwriteProvider.databases!.updateDocument(
+          databaseId: AppwriteConfig.databaseId,
+          collectionId: AppwriteConfig.categoryCollectionId,
+          documentId: categoryId,
+          data: {
+            "title": title,
+            "icon": icon,
+            "theme": theme,
+            "pinToTop": pinToTop
+          },
+        );
+        return right(document);
+      } else {
+        return left(Failure('Check Internet Connection'));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(e.message!));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  Future<Either<Failure, void>> updateCategoryPinStatus(
+      {required String categoryId, required bool pinToTop}) async {
+    try {
+      if (await _connectionChecker.hasConnection) {
+        await _appwriteProvider.databases!.updateDocument(
+          databaseId: AppwriteConfig.databaseId,
+          collectionId: AppwriteConfig.categoryCollectionId,
+          documentId: categoryId,
+          data: {
+            "pinToTop": pinToTop,
+          },
+        );
+        return right(null);
+      } else {
+        return left(Failure('Check Internet Connection'));
+      }
+    } on AppwriteException catch (e) {
       return left(Failure(e.message!));
     } on ServerException catch (e) {
       return left(Failure(e.message));

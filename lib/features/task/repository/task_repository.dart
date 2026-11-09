@@ -62,6 +62,33 @@ class TaskRepository {
     }
   }
 
+  Future<Either<Failure, Document>> updateCompleted({
+    required String id,
+    required bool completed,
+  }) async {
+    try {
+      if (await _connectionChecker.hasConnection) {
+        final document = await _appwrite.databases!.updateDocument(
+          databaseId: AppwriteConfig.databaseId,
+          collectionId: AppwriteConfig.todoCollectionId,
+          documentId: id,
+          data: {
+            'completed': completed,
+          },
+        );
+        return right(document);
+      } else {
+        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(e.message!));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    } catch (e) {
+      return left(Failure('خطای نامشخص: ${e.toString()}'));
+    }
+  }
+
   Future<Either<Failure, List<TodoModel>>> getTasksByCategory(
       String categoryId) async {
     try {
@@ -96,4 +123,65 @@ class TaskRepository {
     }
   }
 
+  // ==========================================
+  // متد ویرایش تسک (بدون تغییر وضعیت completed)
+  // ==========================================
+  Future<Either<Failure, Document>> updateTask({
+    required String id,
+    required String title,
+    required String description,
+    required int priority,
+    DateTime? dueDate,
+    DateTime? remindAt,
+  }) async {
+    try {
+      if (await _connectionChecker.hasConnection) {
+        final document = await _appwrite.databases!.updateDocument(
+          databaseId: AppwriteConfig.databaseId,
+          collectionId: AppwriteConfig.todoCollectionId,
+          documentId: id,
+          data: {
+            "title": title,
+            "description": description,
+            "priority": priority,
+            "dueDate": dueDate?.toIso8601String(),
+            "remindAt": remindAt?.toIso8601String(),
+          },
+        );
+        return right(document);
+      } else {
+        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(e.message!));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    } catch (e) {
+      return left(Failure('خطای نامشخص: ${e.toString()}'));
+    }
+  }
+
+  // ==========================================
+  // متد حذف تک تسک (برای دکمه سطل زباله در TaskItem)
+  // ==========================================
+  Future<Either<Failure, void>> deleteTask({required String id}) async {
+    try {
+      if (await _connectionChecker.hasConnection) {
+        await _appwrite.databases!.deleteDocument(
+          databaseId: AppwriteConfig.databaseId,
+          collectionId: AppwriteConfig.todoCollectionId,
+          documentId: id,
+        );
+        return right(null);
+      } else {
+        return left(Failure('لطفا اتصال اینترنت خود را بررسی کنید'));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(e.message!));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    } catch (e) {
+      return left(Failure('خطای نامشخص: ${e.toString()}'));
+    }
+  }
 }

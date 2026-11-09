@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../../../core/values/colors.dart';
+import '../../../view_model/create_task_view_model.dart'; // اضافه کردن ویومدل
 
-class CreateTaskAppBar extends StatelessWidget {
+class CreateTaskAppBar extends GetView<CreateTaskViewModel> {
   const CreateTaskAppBar({super.key});
 
   @override
@@ -15,16 +15,21 @@ class CreateTaskAppBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('افزودن تسک جدید',
-                      style: TextStyle(
+                  // تغییر هوشمند عنوان
+                  Text(controller.isEditing ? 'ویرایش تسک' : 'افزودن تسک جدید',
+                      style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textMainLight)),
-                  Text('انجامش بده و ذهنت رو آزاد کن!',
-                      style: TextStyle(
+                  // تغییر هوشمند زیرنویس
+                  Text(
+                      controller.isEditing
+                          ? 'جزئیات تسک رو به‌روزرسانی کن!'
+                          : 'انجامش بده و ذهنت رو آزاد کن!',
+                      style: const TextStyle(
                           fontSize: 11, color: AppColors.textMutedLight)),
                 ],
               ),
